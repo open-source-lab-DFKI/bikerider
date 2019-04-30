@@ -15,7 +15,7 @@ export class MyApp implements OnInit {
 
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = 'LoginPage';
+  rootPage: any = 'SearchPage';
 
   pages: Array<{title: string, component: any}>;
 
@@ -35,6 +35,7 @@ export class MyApp implements OnInit {
 
     // used for an example of ngFor and navigation
     this.pages = [
+      { title: 'Search', component: 'SearchPage' },
       { title: 'Login', component: 'LoginPage' },
       { title: 'Registration', component: 'RegistrationPage' },
       { title: 'Welcome', component: 'WelcomePage' },
@@ -68,6 +69,7 @@ export class MyApp implements OnInit {
   private mmirInit(){
 
     this.mmirProvider.init(this.platform, this.nav, /*this.events,*/ this.appConfig, [
+      { ctrlName: 'Application', name: 'search', view: 'SearchPage' },
       { ctrlName: 'Application', name: 'login', view: 'LoginPage' },
       { ctrlName: 'Application', name: 'registration', view: 'RegistrationPage' },
       { ctrlName: 'Application', name: 'welcome', view: 'WelcomePage' },
