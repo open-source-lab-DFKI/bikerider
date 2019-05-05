@@ -24,7 +24,7 @@ export class SearchPage {
   loadmap() {
     this.map = leaflet.map("map").fitWorld();
     leaflet.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attributions: 'www.tphangout.com',
+   //   attributions: 'www.tphangout.com',
       maxZoom: 18
     }).addTo(this.map);
   }
