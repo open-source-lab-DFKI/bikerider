@@ -1,8 +1,8 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import {IonicPage, NavController, Platform } from 'ionic-angular';
 import leaflet from 'leaflet';
-
-
+import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
+import { EsriProvider } from 'leaflet-geosearch';
 declare var AdvancedGeolocation: any;
 @IonicPage()
 @Component({
@@ -12,6 +12,8 @@ declare var AdvancedGeolocation: any;
 
 export class HomePage {
   @ViewChild('map') mapElement: ElementRef;
+  @ViewChild('from') startAdress: ElementRef;
+
   map: any;
   currentLat: any;
   currentLng: any;
@@ -22,9 +24,39 @@ export class HomePage {
   ionViewDidLoad() {
     this.loadMap();
   }
+  osmAutocomplete(){
+  
+    const provider = new EsriProvider();
+  
 
+  new GeoSearchControl({
+    provider: provider,  
+    autoComplete: true,
+    showMarker: true,                                   // optional: true|false  - default true
+    showPopup: false,                                   // optional: true|false  - default false
+    marker: {                                           // optional: L.Marker    - default L.Icon.Default
+    icon: new leaflet.Icon.Default(),
+    draggable: false,
+  },         // required
+   
+        // optional: number      - default 250
+  }).addTo(this.map);
+  const form = document.querySelector('#from');
+  const input = form.querySelector('input[type="text"]');
+ 
+
+   form.addEventListener('submit', async (event) => {
+   event.preventDefault();
+   const results = await provider.search({ query: input.innerHTML });
+   console.log(results); // » [{}, {}, {}, ...]
+});
+
+
+
+ }
   loadMap() {
-    this.map = leaflet.map("map").fitWorld();
+    this.map = leaflet.map("map",
+    ).fitWorld();
 	leaflet.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	    //attributions: 'www.tphangout.com',
 	    maxZoom: 23
@@ -120,6 +152,7 @@ export class HomePage {
     	}
     });
 
+  this.osmAutocomplete();
   }
 
 }

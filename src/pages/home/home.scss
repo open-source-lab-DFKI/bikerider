@@ -6,13 +6,17 @@
       #map {
         height: 100%;
         width: 100%;
+      
+       
       }
-      #to_Adress {
-        width: 60px;
-        margin-top: 1px;
+  
+ 
+      ion-input{
+
+     background-color: hsla(0, 0%, 96%, 0.678)!important;
+        margin-bottom: 4px;
+        position: relative;
       }
-      #from_Adress {
-        width: 60px;
-      }
+    
     }
   }
