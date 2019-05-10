@@ -5,8 +5,9 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { IonicStorageModule } from '@ionic/storage';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-
+import { ReactiveFormsModule } from '../../node_modules/@angular/forms';
 import { MyApp } from './app.component';
+import { Geolocation } from '@ionic-native/geolocation';
 
 import { MmirProvider } from '../providers/mmir';
 import { VoiceUIProvider } from '../providers/mmir';
@@ -22,6 +23,7 @@ import { UserAuthProvider } from './../providers/user-auth';
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
     HttpModule,
+    ReactiveFormsModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -29,7 +31,7 @@ import { UserAuthProvider } from './../providers/user-auth';
   ],
   providers: [
     Storage, MmirProvider, VoiceUIProvider, AppConfig, UserAuthProvider,
-    StatusBar, SplashScreen,
+    StatusBar, SplashScreen, Geolocation,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

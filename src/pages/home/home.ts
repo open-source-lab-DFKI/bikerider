@@ -1,8 +1,10 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
-import {IonicPage, NavController, Platform } from 'ionic-angular';
-import leaflet from 'leaflet';
-import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
-import { EsriProvider } from 'leaflet-geosearch';
+import { Component, NgZone, ViewChild, ElementRef } from '@angular/core';
+import { IonicPage, NavController, Platform, NavParams } from 'ionic-angular';
+import { FormControl } from '../../../node_modules/@angular/forms';
+import * as L from 'leaflet';
+import * as _ from 'lodash';
+import { Geolocation } from '@ionic-native/geolocation';
+declare var google;
 declare var AdvancedGeolocation: any;
 @IonicPage()
 @Component({
@@ -12,147 +14,112 @@ declare var AdvancedGeolocation: any;
 
 export class HomePage {
   @ViewChild('map') mapElement: ElementRef;
-  @ViewChild('from') startAdress: ElementRef;
-
   map: any;
+  currentLocation = {};
+  address;
+  marker;
+  searchControl: FormControl;
+  GoogleAutocomplete;
+  geocoder;
+  autocomplete = { input: '' };
+  autocompleteLocations = [];
   currentLat: any;
   currentLng: any;
+  addressValue: any;
+  zoom: number;
 
-  constructor(public navCtrl: NavController, public platform: Platform) {
+  constructor(public geolocation: Geolocation, private ngZone: NgZone, public navCtrl: NavController, public platform: Platform, public navParams: NavParams) {
+    this.searchControl = new FormControl();
+    this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
+    this.geocoder = new google.maps.Geocoder;
   }
 
   ionViewDidLoad() {
     this.loadMap();
   }
-  osmAutocomplete(){
-  
-    const provider = new EsriProvider();
-  
-
-  new GeoSearchControl({
-    provider: provider,  
-    autoComplete: true,
-    showMarker: true,                                   // optional: true|false  - default true
-    showPopup: false,                                   // optional: true|false  - default false
-    marker: {                                           // optional: L.Marker    - default L.Icon.Default
-    icon: new leaflet.Icon.Default(),
-    draggable: false,
-  },         // required
-   
-        // optional: number      - default 250
-  }).addTo(this.map);
-  const form = document.querySelector('#from');
-  const input = form.querySelector('input[type="text"]');
- 
-
-   form.addEventListener('submit', async (event) => {
-   event.preventDefault();
-   const results = await provider.search({ query: input.innerHTML });
-   console.log(results); // » [{}, {}, {}, ...]
-});
-
-
-
- }
   loadMap() {
-    this.map = leaflet.map("map",
-    ).fitWorld();
-	leaflet.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	    //attributions: 'www.tphangout.com',
-	    maxZoom: 23
-	}).addTo(this.map);
-	this.platform.ready().then(() => {
- 		if (this.platform.is('browser') && !this.platform.is('android')) {
-            AdvancedGeolocation.start((position) => {
-              try {
-                var jsonObject = JSON.parse(position);
-                switch (jsonObject.provider) {
-                  case "gps":
-                    this.currentLat = jsonObject.latitude;
-                    this.currentLng = jsonObject.longitude;
-                    break;
+    this.map = L.map("map").fitWorld();
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: ''
+    }).addTo(this.map);
 
-                  case "network":
-                    this.currentLat = jsonObject.latitude;
-                    this.currentLng = jsonObject.longitude;
-                    break;
+    this.geolocation.getCurrentPosition().then((resp) => {
+      let pos = {
+        lat: resp.coords.latitude,
+        lng: resp.coords.longitude
+      };
+      this.currentLat = resp.coords.latitude;
+      this.currentLat = resp.coords.longitude;
+      this.setAddress(pos);
+      this.map.setView([resp.coords.latitude, resp.coords.longitude], 15);
 
-                  case "satellite":
-                    //TODO
-                    break;
-
-                  case "cell_info":
-                    //TODO
-                    break;
-
-                  case "cell_location":
-                    //TODO
-                    break;
-
-                  case "signal_strength":
-                    //TODO
-                    break;
-                }
-                this.map.setView([this.currentLat, this.currentLng], 16);
-		    	let markerGroup = leaflet.featureGroup();
-		    	let marker: any = leaflet.marker([this.currentLat, this.currentLng]);
-		    	marker.bindPopup("<b>I'm here!</b><br>").openPopup();
-		    	markerGroup.addLayer(marker);
-		    	this.map.addLayer(markerGroup);
-		    	var circle = leaflet.circle([this.currentLat, this.currentLng], {
-		    	    color: 'blue',
-				    fillColor: '#a1d5ed',
-				    fillOpacity: 0.5,
-				    radius: 50
-		    	}).addTo(this.map);
-		  
-
-              } catch (exc) {
-                console.log("Error: " + exc);
-                alert('Sorry looks like there is an error and cannot detect your current location on your Android device!');
-              }
-
-
-            },
-            function (error) {
-                console.log("ERROR! " + JSON.stringify(error));
-            },
-            {
-                "minTime": 500,         // Min time interval between updates (ms)
-                "minDistance": 100,       // Min distance between updates (meters)
-                "noWarn": true,         // Native location provider warnings
-                "providers": "all",     // Return GPS, NETWORK and CELL locations
-                "useCache": true,       // Return GPS and NETWORK cached locations
-                "satelliteData": false, // Return of GPS satellite info
-                "buffer": false,        // Buffer location data
-                "bufferSize": 0,         // Max elements in buffer
-                "signalStrength": false // Return cell signal strength data
-            });
-    	} else {
-			 this.map.locate({
-			   setView: true,
-			   maxZoom: 23
-			 }).on('locationfound', (e) => {
-			   this.map.setView([e.latitude, e.longitude], 16);
-			   let markerGroup = leaflet.featureGroup();
-			   let marker: any = leaflet.marker([e.latitude, e.longitude]);
-			   
-			   markerGroup.addLayer(marker);
-			   this.map.addLayer(markerGroup);
-			   var circle = leaflet.circle([e.latitude, e.longitude], {
-			     color: 'blue',
-	             fillColor: '#a1d5ed',
-		         fillOpacity: 0.5,
-		         radius: 50
-			    }).addTo(this.map);
-			    circle.bindPopup("My area.");
-			  }).on('locationerror', (err) => {
-			    alert(err.message);
-			  });
-    	}
+      this.currentLocation = pos;
+      this.setAddress(this.currentLocation);
+      let markerGroup = L.featureGroup();
+      this.marker = L.marker([resp.coords.latitude, resp.coords.longitude], {
+        draggable: true
+      });
+      this.marker.on('dragend', (event) => {
+        var position = this.marker.getLatLng();
+        this.marker.setLatLng(position, {
+          draggable: 'true'
+        }).bindPopup(position).update();
+        this.currentLocation = position;
+        this.map.panTo(this.currentLocation, 15);
+        this.setAddress(this.currentLocation);
+      });
+      markerGroup.addLayer(this.marker);
+      this.map.addLayer(markerGroup);
+     
+    }).catch((error) => {
+      console.log('Error getting location', error);
     });
-
-  this.osmAutocomplete();
   }
+  updateLocation() {
+    if (this.autocomplete.input == '') {
+      this.autocompleteLocations = [];
+      return;
+    }
+    this.GoogleAutocomplete.getPlacePredictions({ input: this.autocomplete.input},
+      (predictions, status) => {
+        this.autocompleteLocations = [];
+        this.ngZone.run(() => {
+          _.forEach(predictions, (prediction) => {
+            this.autocompleteLocations.push(prediction);
+          });
+        });
+      });
+  }
+  selectLocation(location) {
+    this.autocompleteLocations = [];
+    this.searchControl.setValue(location.description);
+
+    this.geocoder.geocode({ 'address': location.description }, (results, status) => {
+      if (status === 'OK' && results[0]) {
+        let position = {
+          lat: results[0].geometry.location.lat(),
+          lng: results[0].geometry.location.lng()
+        };
+        this.currentLat = results[0].geometry.location.lat();
+        this.currentLng = results[0].geometry.location.lng();
+        this.map.panTo(position, 15);
+        this.marker.setLatLng(position);
+      }
+    })
+  }
+  setAddress(location) {
+    this.geocoder.geocode({ 'location': location }, (results, status) => {
+      if (status == 'OK' && results[0]) {
+        this.address = results[0].formatted_address;
+        this.searchControl.setValue(this.address);
+      } else {
+        console.log('No results found');
+      }
+    });
+  }
+   
+
+
 
 }
