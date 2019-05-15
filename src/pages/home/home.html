@@ -6,25 +6,34 @@
 -->
 <ion-header>
 	<ion-navbar>
-		
-		<ion-title>OpenSourceLab</ion-title>
+	<button ion-button menuToggle color="#FFFFFF">
+		<ion-icon name="menu"></ion-icon>
+	  </button>
+	  <ion-title>OpenSourceLab</ion-title>
 	</ion-navbar>
+
+	<!-- Searchbar -->
+	<ion-searchbar [(ngModel)]="autocomplete.input" (ionInput)="updateLocation()" [formControl]="searchControl" placeholder="search for start"></ion-searchbar>
+			<ion-list [hidden]="autocompleteLocations.length == 0">
+				<ion-item *ngFor="let location of autocompleteLocations" tappable (click)="selectLocation(location)">
+					{{ location.description }}
+				</ion-item>
+			</ion-list>
+			<ion-searchbar  placeholder="search for destination"></ion-searchbar>
+			<ion-list [hidden]="autocompleteLocations.length == 0">
+				<ion-item >
+					
+				</ion-item>
+			</ion-list>
 </ion-header>
-<!-- Searchbar -->
-<ion-content padding>
-<ion-searchbar [(ngModel)]="autocomplete.startinput" (ionInput)="updateLocation()" [formControl]="searchControl" placeholder="search for start"></ion-searchbar>
-<ion-list [hidden]="autocompleteLocations.length == 0">
-	<ion-item *ngFor="let location of autocompleteLocations" tappable (click)="selectLocation(location)">
-		{{ location.description }}
-	</ion-item>
-</ion-list>
-<ion-searchbar [(ngModel)]="autocomplete.destinationinput" (ionInput)="updateLocation()" [formControl]="searchControl" placeholder="Search for destination"></ion-searchbar>
-<ion-list [hidden]="autocompleteLocations.length == 0">
-	<ion-item *ngFor="let location of autocompleteLocations" tappable (click)="selectLocation(location)">
-		
-	</ion-item>
-</ion-list>
+
 <!-- Map -->
-<div id="map"></div>
+<ion-content>
+		
+<div id="map">
+		<div class="actionbutton actionImg">
+			</div>	
+</div>
+
 
 </ion-content>

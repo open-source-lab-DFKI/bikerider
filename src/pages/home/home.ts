@@ -1,9 +1,12 @@
 import { Component, NgZone, ViewChild, ElementRef } from '@angular/core';
 import { IonicPage, NavController, Platform, NavParams } from 'ionic-angular';
 import { FormControl } from '../../../node_modules/@angular/forms';
+import { HttpClient} from '@angular/common/http';
 import * as L from 'leaflet';
 import * as _ from 'lodash';
 import { Geolocation } from '@ionic-native/geolocation';
+import { RestApiProvider } from '../../providers/rest-api/rest-api';
+
 declare var google;
 declare var AdvancedGeolocation: any;
 @IonicPage()
@@ -11,6 +14,7 @@ declare var AdvancedGeolocation: any;
   selector: 'page-home',
   templateUrl: 'home.html'
 })
+
 
 export class HomePage {
   @ViewChild('map') mapElement: ElementRef;
@@ -27,16 +31,48 @@ export class HomePage {
   currentLng: any;
   addressValue: any;
   zoom: number;
+  users: any;
+  propertyList = [];
 
-  constructor(public geolocation: Geolocation, private ngZone: NgZone, public navCtrl: NavController, public platform: Platform, public navParams: NavParams) {
+
+// constructor 
+  constructor(public restProvider: RestApiProvider, public http: HttpClient, public geolocation: Geolocation, private ngZone: NgZone, public navCtrl: NavController, public platform: Platform, public navParams: NavParams) {
     this.searchControl = new FormControl();
     this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
     this.geocoder = new google.maps.Geocoder;
+    
   }
 
+  //load all ressources 
   ionViewDidLoad() {
     this.loadMap();
+    this.getUsersPositions();
   }
+
+
+// get users position from restprovider
+  getUsersPositions() {
+    this.restProvider.getUsersPositions()
+    .then(data => {
+      this.users = data;
+      for (const property of this.users) {
+        let bikeIcon = L.icon({
+          iconUrl: './assets/content/images/bicycle.svg', // url of the icon
+          iconSize:     [38, 95], // size of the icon
+          shadowSize:   [50, 64], // size of the shadow
+          iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+          shadowAnchor: [4, 62],  // the same for the shadow
+          popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+      });
+        L.marker([property.position.latitude, property.position.longitude], {icon: bikeIcon}).addTo(this.map)
+        .bindPopup(property.userId)
+          .openPopup();
+      }
+      console.log(">>> check data from " + this.users);
+    });
+  }
+
+  //load map functions 
   loadMap() {
     this.map = L.map("map").fitWorld();
     L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
@@ -49,11 +85,11 @@ export class HomePage {
         lat: resp.coords.latitude,
         lng: resp.coords.longitude
       };
+
       this.currentLat = resp.coords.latitude;
       this.currentLat = resp.coords.longitude;
       this.setAddress(pos);
       this.map.setView([resp.coords.latitude, resp.coords.longitude], 15);
-
       this.currentLocation = pos;
       this.setAddress(this.currentLocation);
       let markerGroup = L.featureGroup();
@@ -76,6 +112,8 @@ export class HomePage {
       console.log('Error getting location', error);
     });
   }
+  
+  //retrieve google autocomplete 
   updateLocation() {
     if (this.autocomplete.input == '') {
       this.autocompleteLocations = [];
@@ -91,6 +129,7 @@ export class HomePage {
         });
       });
   }
+  // choose location after selection
   selectLocation(location) {
     this.autocompleteLocations = [];
     this.searchControl.setValue(location.description);
@@ -108,6 +147,7 @@ export class HomePage {
       }
     })
   }
+
   setAddress(location) {
     this.geocoder.geocode({ 'location': location }, (results, status) => {
       if (status == 'OK' && results[0]) {

@@ -1,0 +1,62 @@
+{"properties": [
+    {
+      "userId": "661bdf33-d363-4de1-bed6-962db118f594",
+      "position": {
+        "longitude": 13.373577114118593,
+        "latitude": 52.50317430810756
+        
+      },
+      "positionTimestamp": 1557312175
+    },
+    {
+      "userId": "7d913893-55ff-4552-b397-f36f44e594da",
+      "position": {
+        "longitude": 13.390786167158145,
+        "latitude": 52.50045739887656
+        
+      },
+      "positionTimestamp": 1557311834
+    },
+    {
+      "userId": "ff0f823f-cbf9-47bf-943d-e0c77003427e",
+      "position": {
+        "longitude": 13.354980201179375,
+        "latitude": 52.52703956461363
+      },
+      "positionTimestamp": 1557311166
+    },
+    {
+      "userId": "71840d68-9b0c-4832-bdd8-de6fcd0e24cd",
+      "position": {
+        "longitude": 13.349977793157324,
+        "latitude": 52.52636000996745
+      },
+      "positionTimestamp": 1557311131
+    },
+    {
+      "userId": "3618b301-4a00-4619-8664-aeb550c350b8",
+      "position": {
+        "longitude": 13.349770010167948,
+        "latitude": 52.53015052111931
+      },
+      "positionTimestamp": 1557311450
+    },
+
+    {
+        "userId": "3618b301-4a00-4619-8664-aeb550c350b8",
+        "position": {
+          "longitude": 13.415418403233058,
+          "latitude": 52.52586876739298
+        },
+        "positionTimestamp": 1557311450
+      },
+
+      {
+        "userId": "3618b301-4a00-4619-8664-aeb550c350b8",
+        "position": {
+          "longitude": 13.412671821201808,
+          "latitude": 52.5039310328132
+        },
+        "positionTimestamp": 1557311450
+      }
+  ]}

@@ -8,11 +8,12 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { ReactiveFormsModule } from '../../node_modules/@angular/forms';
 import { MyApp } from './app.component';
 import { Geolocation } from '@ionic-native/geolocation';
-
+import { HttpClientModule } from '@angular/common/http';
 import { MmirProvider } from '../providers/mmir';
 import { VoiceUIProvider } from '../providers/mmir';
 import { AppConfig } from '../providers/app-config';
 import { UserAuthProvider } from './../providers/user-auth';
+import { RestApiProvider } from '../providers/rest-api/rest-api';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { UserAuthProvider } from './../providers/user-auth';
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
     HttpModule,
+    HttpClientModule,
     ReactiveFormsModule,
   ],
   bootstrap: [IonicApp],
@@ -32,7 +34,8 @@ import { UserAuthProvider } from './../providers/user-auth';
   providers: [
     Storage, MmirProvider, VoiceUIProvider, AppConfig, UserAuthProvider,
     StatusBar, SplashScreen, Geolocation,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    RestApiProvider
   ]
 })
 export class AppModule {}
