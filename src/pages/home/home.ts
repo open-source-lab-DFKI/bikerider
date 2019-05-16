@@ -58,7 +58,7 @@ export class HomePage {
       for (const property of this.users) {
         let bikeIcon = L.icon({
           iconUrl: './assets/content/images/bicycle.svg', // url of the icon
-          iconSize:     [38, 95], // size of the icon
+          iconSize:     [20, 68], // size of the icon
           shadowSize:   [50, 64], // size of the shadow
           iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
           shadowAnchor: [4, 62],  // the same for the shadow
@@ -76,11 +76,14 @@ export class HomePage {
   loadMap() {
     this.map = L.map("map").fitWorld();
     L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-      maxZoom: 18,
+      maxZoom: 23,
       attribution: ''
     }).addTo(this.map);
-
-    this.geolocation.getCurrentPosition().then((resp) => {
+    
+    
+    this.platform.ready().then(() => {
+     
+    this.geolocation.getCurrentPosition({ enableHighAccuracy: true }).then((resp) => {
       let pos = {
         lat: resp.coords.latitude,
         lng: resp.coords.longitude
@@ -111,6 +114,7 @@ export class HomePage {
     }).catch((error) => {
       console.log('Error getting location', error);
     });
+     });
   }
   
   //retrieve google autocomplete 

@@ -3,7 +3,7 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { Nav, Platform, Events } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-
+import { Geolocation } from '@ionic-native/geolocation';
 import { MmirProvider , VoiceUIProvider } from '../providers/mmir';
 import { AppConfig } from './../providers/app-config';
 import { AppCmd } from '../models/speech/SpeechCommand';
@@ -15,13 +15,14 @@ export class MyApp implements OnInit {
 
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = 'SearchPage';
+  rootPage: any = 'LoginPage';
 
   pages: Array<{title: string, component: any}>;
 
   mmir;
 
   constructor(
+    public geolocation: Geolocation,
     public platform: Platform,
     public statusBar: StatusBar,
     public splashScreen: SplashScreen,
@@ -36,7 +37,6 @@ export class MyApp implements OnInit {
     // used for an example of ngFor and navigation
     this.pages = [
       { title: 'Home', component: 'HomePage' },
-      { title: 'Search', component: 'SearchPage' },
       { title: 'Login', component: 'LoginPage' },
       { title: 'Registration', component: 'RegistrationPage' },
       { title: 'Welcome', component: 'WelcomePage' },
@@ -71,7 +71,6 @@ export class MyApp implements OnInit {
 
     this.mmirProvider.init(this.platform, this.nav, /*this.events,*/ this.appConfig, [
       { ctrlName: 'Application', name: 'home', view: 'HomePage' },
-      { ctrlName: 'Application', name: 'search', view: 'SearchPage' },
       { ctrlName: 'Application', name: 'login', view: 'LoginPage' },
       { ctrlName: 'Application', name: 'registration', view: 'RegistrationPage' },
       { ctrlName: 'Application', name: 'welcome', view: 'WelcomePage' },

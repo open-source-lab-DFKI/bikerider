@@ -11,7 +11,6 @@
 	  </button>
 	  <ion-title>OpenSourceLab</ion-title>
 	</ion-navbar>
-
 	<!-- Searchbar -->
 	<ion-searchbar [(ngModel)]="autocomplete.input" (ionInput)="updateLocation()" [formControl]="searchControl" placeholder="search for start"></ion-searchbar>
 			<ion-list [hidden]="autocompleteLocations.length == 0">
@@ -29,11 +28,11 @@
 
 <!-- Map -->
 <ion-content>
-		
+	
 <div id="map">
-		<div class="actionbutton actionImg">
-			</div>	
-</div>
+	<div class="actionbutton actionImg">
+	</div>	
 
+</div>	
 
 </ion-content>
