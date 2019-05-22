@@ -113,7 +113,8 @@ Changes in `src` will be automatically detected, compiled, and the served web pa
 
 * 1- Import the project: `git clone git@gitlab-cos.b.dfki.de:smart-mobility/opensourcelabmobilityapp.git`
 * 2- change the branch: `git checkout ionic-gui`
-* 3- Add cordova android platform: `cordova add platform android@5.x`. Notice: It is strongly recommended to
+* 3- remove the already exist android platform: `ionic cordova rm platform android`
+* 3- Add cordova android platform: `ionic cordova add platform android@5.x`. Notice: It is strongly recommended to
     employ Cordova@Android 5.1.0  to avoid versions conflict with the __Crosswalk WebView__ cordova plugin.
 * 4- To outline all pre-installed plugins in the project environment type: `cordova platforms ls`
 * 5- To build an Android APK, type: run `ionic cordova build android` for building the Android APK
