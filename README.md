@@ -1,9 +1,7 @@
 OpenSourceLab App
-
-the structure of the Project is taken from the example project of mmir-starter-kit-ionic, that was developed by Aaron, this Project is based on ionic Framework v3
 ===========
 
-Experimental integration of the [MMIR framework][0] in [ionic][1] v3 (_typescript_).
+the structure of the Project is taken from the example project of mmir-starter-kit-ionic.This Project is based on ionic-v3 and Mmir Frameworks
 
 # Prerequisites
 
@@ -77,11 +75,15 @@ __2)__ on project folder
 
 ## Project Structure
 * you can look to the following webpage of Ionic project structure to understand what is the role of each component ==> https://ionicframework.com/docs/v3/intro/tutorial/project-structure/
+* so far the only added page is home folder, this page contains the developed leaflet- map and show the current position, geolocation and make a Restapi call using get request of all users positions from the following Endpoint `http://lnv-3246.sb.dfki.de:3001/bikerider/v1/users`.  
+* the RestApi call is located in this folder /rest-api/rest-api.ts
+* to add a new ionic-page to the project, you can use the folowing command `ionic generate page`
+
 
 **NOTE:** Be aware that in difference to usual Cordova projects, the source files are located in `/src` and
 not in `/www`. The `/www` directory contains generated files which will be overwritten on `build`ing the project.
 
-* so far the only added page is home folder, this page contains the developed leaflet- map and show the current position, geolocation and make a Restapi call using get request of all users positions from the following Endpoint `http://lnv-3246.sb.dfki.de:3001/bikerider/v1/users`.  
+
 
 
 # Testing (in Browser)
