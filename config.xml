@@ -50,5 +50,6 @@
     <plugin name="cordova-plugin-vibration" spec="^3.0.1" />
     <plugin name="cordova-plugin-network-information" spec="^2.0.1" />
     <plugin name="cordova-plugin-geolocation" spec="^4.0.1" />
+    <plugin name="cordova-plugin-advanced-geolocation" spec="^1.6.2" />
     <engine name="android" spec="5.1.1" />
 </widget>

@@ -8,7 +8,7 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { RestApiProvider } from '../../providers/rest-api/rest-api';
 
 declare var google;
-declare var AdvancedGeolocation: any;
+
 @IonicPage()
 @Component({
   selector: 'page-home',
@@ -35,7 +35,7 @@ export class HomePage {
   propertyList = [];
 
 
-// constructor 
+  // constructor 
   constructor(public restProvider: RestApiProvider, public http: HttpClient, public geolocation: Geolocation, private ngZone: NgZone, public navCtrl: NavController, public platform: Platform, public navParams: NavParams) {
     this.searchControl = new FormControl();
     this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
@@ -49,6 +49,10 @@ export class HomePage {
     this.getUsersPositions();
   }
 
+  // prevent initialize container error  
+  ionViewCanLeave(){
+    document.getElementById("map").outerHTML = "";
+  }
 
 // get users position from restprovider
   getUsersPositions() {
@@ -83,7 +87,7 @@ export class HomePage {
     
     this.platform.ready().then(() => {
      
-    this.geolocation.getCurrentPosition({ enableHighAccuracy: true }).then((resp) => {
+    this.geolocation.getCurrentPosition( {enableHighAccuracy: true, timeout: 20000, maximumAge: 10000}).then((resp) => {
       let pos = {
         lat: resp.coords.latitude,
         lng: resp.coords.longitude
@@ -152,7 +156,8 @@ export class HomePage {
     })
   }
 
-  setAddress(location) {
+  // change Adress 
+    setAddress(location) {
     this.geocoder.geocode({ 'location': location }, (results, status) => {
       if (status == 'OK' && results[0]) {
         this.address = results[0].formatted_address;

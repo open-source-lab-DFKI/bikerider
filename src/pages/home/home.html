@@ -11,24 +11,25 @@
 	  </button>
 	  <ion-title>OpenSourceLab</ion-title>
 	</ion-navbar>
-	<!-- Searchbar -->
-	<ion-searchbar [(ngModel)]="autocomplete.input" (ionInput)="updateLocation()" [formControl]="searchControl" placeholder="search for start"></ion-searchbar>
-			<ion-list [hidden]="autocompleteLocations.length == 0">
-				<ion-item *ngFor="let location of autocompleteLocations" tappable (click)="selectLocation(location)">
-					{{ location.description }}
-				</ion-item>
-			</ion-list>
-			<ion-searchbar  placeholder="search for destination"></ion-searchbar>
-			<ion-list [hidden]="autocompleteLocations.length == 0">
-				<ion-item >
-					
-				</ion-item>
-			</ion-list>
+
 </ion-header>
 
 <!-- Map -->
 <ion-content>
-	
+		<!-- Searchbar -->
+		<ion-searchbar [(ngModel)]="autocomplete.input" (ionInput)="updateLocation()" [formControl]="searchControl" placeholder="search for start"></ion-searchbar>
+		<ion-list [hidden]="autocompleteLocations.length == 0">
+			<ion-item *ngFor="let location of autocompleteLocations" tappable (click)="selectLocation(location)">
+				{{ location.description }}
+			</ion-item>
+		</ion-list>
+		<ion-searchbar  placeholder="search for destination"></ion-searchbar>
+		<ion-list [hidden]="autocompleteLocations.length == 0">
+			<ion-item >
+				
+			</ion-item>
+		</ion-list>
+		
 <div id="map">
 	<div class="actionbutton actionImg">
 	</div>	
