@@ -3,8 +3,8 @@
 The directory structure of this project is taken from the example project of [mmir-starter-kit](https://github.com/mmig/mmir-starter-kit). This Project is based on the cross-platform framework Ionic and MMIR.
 
 - [Getting Started](#getting-started)
-  - [Install the Prerequisites](#install-the-prerequisites)
   - [Source Code & Project Structure](#source-code--project-structure)
+  - [Install the Prerequisites](#install-the-prerequisites)
 - [Recommended Configuration](#recommended-configuration)
   - [Disable Auto-Save](#disable-auto-save)
 - [Transpiling & Running the App](#transpiling--running-the-app)
@@ -22,36 +22,7 @@ The directory structure of this project is taken from the example project of [mm
 
 ## Getting Started
 
-This section describes the setup for the local development environment. The prerequisites that need to be installed manually are listed, and the project's source code is outlined.
-
-### Install the Prerequisites
-
-The following list shows software prerequisites for development, and for running the app. As there are dependencies between them (e.g., Cordova and Ionic need Node.js), it is recommended to install the prerequisites in the given order.
-
-- [Node.js](https://nodejs.org/en/) – tested with v11.6.0
-    - Install using the installers available at [*Previous Releases*](https://nodejs.org/en/download/releases/)
-   
-- [Cordova CLI](https://cordova.apache.org/docs/en/9.x/guide/cli/index.html#installing-the-cordova-cli) – tested with v8.1.2
-   - Install using `npm install -g cordova@8`
-
-- [Ionic](https://ionicframework.com/) framework
-   - Install using: `npm install -g ionic@3.4`  
-
-- Android SDK 
-   - The easiest way is to use the Android Studio (GUI) which can be found on [Android Developer](https://developer.android.com/studio/index.html#downloads), and then to install the `Android SDK Build Tools version >= 26.x`
-    - Alternatively, you can use the sdk-tools (see section [*Command line tools only*](https://developer.android.com/studio/index.html#downloads)) and install the build tools using the `sdkmanager`:
-      - See the available versions of the build-tools: `sdkmanager --list | grep build`
-      - Install a specific version: `sdkmanager "build-tools;29.0.2"`, or see the [Android user guide](https://developer.android.com/studio/command-line/sdkmanager#install_packages) for details
-  
-- [Gradle](https://gradle.org/) – tested with v5.6.1
-  - This is only needed if you did not install Android Studio, as Gradle is part of Android Studio 
-  - Gradle is available on its official [*Releases*](https://gradle.org/releases/) page
-
-- [Java JDK 8](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) – tested with v1.8.0_191
-
-- Apache ANT – tested with v1.10.5 
-  - ANT just needs to be extracted and added to the path
-  - Set `ANT_HOME` to the Apache ANT directory, e.g., on Windows do `set ANT_HOME=C:\tools\apache-ant-1.10.5`
+This section describes the setup for the local development environment. 
 
 ### Source Code & Project Structure
 
@@ -62,6 +33,44 @@ Take a look on the page Ionic docs >> [Project Structure](https://ionicframework
 > **Important**: Compared to Cordova projects, the source files are located in `/src` and not in `/www`. The `/www` directory contains generated files which will be overwritten when building the project.
   
 So far, the only added view is Home (see sidebar in burger menu). It contains the Leaflet-based map and shows the user's current position. It contains forms to enter the start and destination, and makes a REST API call using GET to get the position of all users. The code of the REST API call is located in the file `/rest-api/rest-api.ts`. To add a new view to the project, you can use `ionic generate page`.
+
+### Install the Prerequisites
+
+The following list shows software prerequisites for development, and for running the app. Following, the software that needs to be installed manually before installing the remaining packages automatically:
+
+- Android SDK
+   - The easiest way is to use the Android Studio (GUI) which can be found on [Android Developer](https://developer.android.com/studio/index.html#downloads), and then to install the `Android SDK Build Tools version >= 26.x`
+    - Alternatively, you can use the sdk-tools (see section [*Command line tools only*](https://developer.android.com/studio/index.html#downloads)) and install the build tools using the `sdkmanager`:
+      - See the available versions of the build-tools: `sdkmanager --list | grep build`
+      - Install a specific version: `sdkmanager "build-tools;29.0.2"`, or see the [Android user guide](https://developer.android.com/studio/command-line/sdkmanager#install_packages) for details
+  
+- [Gradle](https://gradle.org/) – tested with v5.6.1
+  - This is only needed if you did not install Android Studio, as Gradle is part of Android Studio 
+  - Gradle is available on its official [*Releases*](https://gradle.org/releases/) page
+
+- [Java JDK 8](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) – tested with v1.8.0_191
+  - The latest Java version will not work, therefore it is important to stick to Java8.
+  - Make sure that `java -version` prints a version number starting with `1.8.x`.
+
+- Apache ANT – tested with v1.10.5 
+  - ANT just needs to be extracted and added to the path
+  - Set `ANT_HOME` to the Apache ANT directory, e.g., on Windows do `set ANT_HOME=C:\tools\apache-ant-1.10.5`
+
+- [Node.js](https://nodejs.org/en/) – tested with v12.9.1
+    - Install using the installers available at [*Previous Releases*](https://nodejs.org/en/download/releases/)
+
+- [Cordova CLI](https://cordova.apache.org/docs/en/9.x/guide/cli/index.html#installing-the-cordova-cli) – tested with v8.1.2
+   - Install using `npm install -g cordova@8.1.2`
+
+- [Ionic](https://ionicframework.com/) framework
+   - Install using: `npm install -g ionic@3.4.0`  
+   - Then run `ionic` and accept using `Y` the question asking whether to install the project's dependencies.
+
+After installing everything, run `npm install` to install the required dependencies. 
+
+Next, run `ionic serve` and accept the message *? Looks like this is an Ionic Angular project, would you like to install @ionic/cli-plugin-ionic-angular and continue? (Y/n)* by typing `Y`. At the end, a browser window with the web app should open automatically. Thereafter, stop the app server by pressing CTRL+C.
+
+Lastly, run `ionic cordova build android`. A message like *? The plugin @ionic/cli-plugin-cordova is not installed. Would you like to install it and continue? (Y/n)* should appear. 
 
 ## Recommended Configuration
 

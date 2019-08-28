@@ -12,6 +12,7 @@ $RECYCLE.BIN/
 .tmp/
 .versions/
 .vscode/
+.gradle/
 /.sourcemaps
 /build/temp
 /build/typescript_util
