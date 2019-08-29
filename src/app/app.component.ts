@@ -15,7 +15,7 @@ export class MyApp implements OnInit {
 
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = 'LoginPage';
+  rootPage: any = 'HomePage';
 
   pages: Array<{title: string, component: any}>;
 
@@ -36,11 +36,7 @@ export class MyApp implements OnInit {
 
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Home', component: 'HomePage' },
-      { title: 'Login', component: 'LoginPage' },
-      { title: 'Registration', component: 'RegistrationPage' },
-      { title: 'Welcome', component: 'WelcomePage' },
-      { title: 'Add Appointment', component: 'CalendarPage' }
+      { title: 'Home', component: 'HomePage' }
     ];
 
   }
@@ -70,19 +66,15 @@ export class MyApp implements OnInit {
   private mmirInit(){
 
     this.mmirProvider.init(this.platform, this.nav, /*this.events,*/ this.appConfig, [
-      { ctrlName: 'Application', name: 'home', view: 'HomePage' },
-      { ctrlName: 'Application', name: 'login', view: 'LoginPage' },
-      { ctrlName: 'Application', name: 'registration', view: 'RegistrationPage' },
-      { ctrlName: 'Application', name: 'welcome', view: 'WelcomePage' },
-      { ctrlName: 'Calendar', name: 'create_appointment', view: 'CalendarPage' }
+      { ctrlName: 'Application', name: 'home', view: 'HomePage' }
     ]);
 
     // this.mmir.ready(() => {
-    //
+    
     //   this.appConfig.get('speechEngine').then(defCtx => {
     //     this.mmir.MediaManager.setDefaultCtx(defCtx);
     //   });
-    //
+    
     // });
   }
 

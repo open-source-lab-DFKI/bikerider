@@ -1,12 +1,9 @@
-<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0"
-       profile="ecmascript" id="scxmlRoot" initial="AppStart">
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" profile="ecmascript" id="scxmlRoot" initial="AppStart">
 
+	<!-- State Machine for MMIR StarterKit App -->
 
-<!-- State Machine for MMIR StarterKit App -->
-
-
-<datamodel>
-     <!-- HELPER util with helper-functions:
+	<datamodel>
+		<!-- HELPER util with helper-functions:
 
      		createVuiOptions(eventData) 	: JSON		creates JSON either from eventData OR from current data-model/SC-state
      													{
@@ -19,16 +16,15 @@
 											     		where
 											     			mode: "command" | "dictation"
      		emma							: the EMMA util (see assets/app/emma.js), e.g.: toEmma(rawEvent,data) and fire(rawEvent,data)
-
       -->
-     <data id="_util" expr="null"/>
-     <data id="mmir" expr="null"/>
- </datamodel>
+		<data id="_util" expr="null"/>
+		<data id="mmir" expr="null"/>
+	</datamodel>
 
-<state id="AppStart" name="AppStart">
+	<state id="AppStart" name="AppStart">
 
-  <transition event="init" name="init" target="LoginView">
-      <script>//<![CDATA[
+		<transition event="init" name="init" target="MainView">
+			<script>//																<![CDATA[
 
       	var data = _event.data;
       	mmir = data.mmir;
@@ -137,27 +133,16 @@
     _util.dlg.getOnPageRenderedHandler();//FIXME DEBUG
 
       //]]></script>
-      <assign location="_event.data" expr="{navGoRoot: true}"/>
-  </transition>
-</state>
+			<assign location="_event.data" expr="{navGoRoot: true}"/>
+		</transition>
+	</state>
 
 
-<parallel id="Main" name="Main">
+	<parallel id="Main" name="Main">
 
-    <!--transition event="speech-input-started" name="speech-input-started" target="AsrActive" /-->
-    <!--transition event="speech-input-stopped" name="speech-input-stopped" target="AsrInactive" /-->
-
-
-    <!-- transition event="speech-input-started" name="speech-input-started" target="AsrActive" /-->
-
-    <state id="Gui" name="Gui" initial="LoginView">
-
-		<!-- datamodel>
-		    <data id="test_input_modality" expr="''"/>
-		</datamodel-->
-
-		<onexit>
-		    <script>
+		<state id="Gui" name="Gui" initial="MainView">
+			<onexit>
+				<script>
 		        //remove listener for micro-level changes:
 		        _util.dlg.raise('showMicLevelsInactive');
 		        //close cmd-dialog ect. if necessary, before leaving:
@@ -165,303 +150,156 @@
 
 		        //stop reading
 		        _util.dlg.raise('stop-reading');
-		    </script>
-		</onexit>
+				</script>
+			</onexit>
 
-    <onentry>
-		    <script>
+			<onentry>
+				<script>
 		        console.log('entered MAIN -> ', _event);
-		    </script>
-		</onentry>
+				</script>
+			</onentry>
 
-		<transition event="showSpeechStateActive" name="showSpeechStateActive">
-		    <script>
+			<transition event="showSpeechStateActive" name="showSpeechStateActive">
+				<script>
 		        var options = _util.createVuiOptions(_event.data);
 		        options.state = true;
 		        if(_util.isDebugVui) console.warn('showSpeechStateActive: ', options);
        	        _util.dlg.perform(_util.speechCtrlName, 'showSpeechInputState', options);
-		    </script>
-		</transition>
+				</script>
+			</transition>
 
-		<transition event="showSpeechStateInactive" name="showSpeechStateInactive">
-		    <script>
+			<transition event="showSpeechStateInactive" name="showSpeechStateInactive">
+				<script>
 		        var options = _util.createVuiOptions(_event.data);
 		        options.state = false;
 		        if(_util.isDebugVui) console.warn('showSpeechStateInactive: ', options);
        	        _util.dlg.perform(_util.speechCtrlName, 'showSpeechInputState', options);
-		    </script>
-		</transition>
+				</script>
+			</transition>
 
 
-		<transition event="showMicLevelsActive" name="showMicLevelsActive">
-		    <script>
+			<transition event="showMicLevelsActive" name="showMicLevelsActive">
+				<script>
 		        var options = _util.createVuiOptions(_event.data);
 		        options.isStart = true;
 		        if(_util.isDebugVui) console.warn('showMicLevelsActive: ', options);
 		        _util.dlg.perform(_util.speechCtrlName, 'changeMicLevels', options);
-		    </script>
-		</transition>
+				</script>
+			</transition>
 
-		<transition event="showMicLevelsInactive" name="showMicLevelsInactive">
-		    <script>
+			<transition event="showMicLevelsInactive" name="showMicLevelsInactive">
+				<script>
 		        var options = _util.createVuiOptions(_event.data);
             options.isStart = false;
 		        if(_util.isDebugVui) console.warn('showMicLevelsInactive: ', options);
 		        _util.dlg.perform(_util.speechCtrlName, 'changeMicLevels', options);
-		    </script>
-		</transition>
+				</script>
+			</transition>
 
-		<transition event="speech-recognition" name="speech-recognition" cond="_util.isSpeechCommand(_event.data)">
-		    <script>
+			<transition event="speech-recognition" name="speech-recognition" cond="_util.isSpeechCommand(_event.data)">
+				<script>
 		        if(_util.isDebugVui) console.info('speech-recognition (command-mode) with data ', _event.data);
        	        _util.dlg.perform(_util.speechCtrlName, 'determineSpeechCmd', _event.data);
-		    </script>
-		</transition>
+				</script>
+			</transition>
 
-		<transition event="speech-recognition" name="speech-recognition" cond="_util.isSpeechDictation(_event.data)">
-		    <script>
+			<transition event="speech-recognition" name="speech-recognition" cond="_util.isSpeechDictation(_event.data)">
+				<script>
 		        if(_util.isDebugVui) console.info('speech-recognition (dictation-mode) with data ', _event.data);
 		        var data = _event.data;//_util.emma.addTarget(_event.data, target_id);
        	        _util.dlg.perform(_util.speechCtrlName, 'showDictationResult', data);
-		    </script>
-		</transition>
+				</script>
+			</transition>
 
-		<transition event="speech-understanding" name="speech-understanding">
-		    <script>
+			<transition event="speech-understanding" name="speech-understanding">
+				<script>
 		        if(_util.isDebugVui) console.info('speech-understanding with data ', _event.data);
        	        _util.dlg.perform(_util.speechCtrlName, 'execSpeechCmd', _event.data);
-		    </script>
-		</transition>
+				</script>
+			</transition>
 
-		<state id="LoginView" name="LoginView">
+			<state id="MainView" name="MainView">
 
-      <onentry>
-        <script>
+				<onentry>
+					<script>
           var data = _event &amp;&amp; _event.data;
-          console.log('starting DialogEngine state machine ', data);
-          _util.dlg.render('Application', 'login', data);
-        </script>
-      </onentry>
+          _util.dlg.render('Application', 'home', data);
+					</script>
+				</onentry>
 
-      <transition event="login_btn" name="login_btn" target="login_user" />
-      <transition event="sign_up_btn" name="sign_up_btn" target="registration_form" />
-
-      <transition name="language_btn" event="language_btn" >
-        <script>
-  			     _util.dlg.perform('Application','showLangMenu');
-        </script>
-      </transition>
-
-      <transition name="language_choosen" event="language_choosen" >
-        <script>
-
-          console.log('raised language_choosen -> '+JSON.stringify(_event.data));
-
-      		var newLang = _event.data &amp;&amp; _event.data.language ? _event.data.language : '';
-          if(newLang){
-            currentLang = mmir.lang.getLanguage();
-            if(currentLang !== newLang){
-              newLang = mmir.lang.setLanguage(newLang);
-              _util.dlg.perform('Application', 'updateLanguage', newLang);
-            }
-          }
-        </script>
-      </transition>
+			</state>
 
 		</state>
+		<!-- END: GUI  -->
 
-    <state id="registration_form" name="registration_form">
+		<state id="Vui" name="Vui" initial="AsrInactive">
 
-      <onentry>
-        <script>
-          _util.dlg.render('Application', 'registration', _event.data);
-        </script>
-      </onentry>
-
-      <transition event="register_btn" name="register_btn" target="try_to_register_new_user" />
-
-      <transition event="back" name="back" target="LoginView">
-        <assign location="_event" expr="_util.setNavInHistory(_event)"/>
-      </transition>
-
-    </state>
-
-    <state id="try_to_register_new_user" name="try_to_register_new_user">
-
-      <onentry>
-        <script>
-  			  _util.dlg.perform('Application', 'register', _event.data);
-        </script>
-      </onentry>
-
-      <transition event="user_registered" cond="mmir.User.getInstance() == null" target="LoginView">
-        <assign location="_event" expr="_util.setNavInHistory(_event)"/>
-      </transition>
-
-      <transition event="user_registered" cond="mmir.User.getInstance() != null" target="MainView">
-        <script>
-          _event.data = _event.data || {};
-          //remove RegisterView from navigation-history:
-          _event.data.navReplace = true;
-        </script>
-      </transition>
-
-    </state>
-
-    <state id="login_user" name="login_user">
-
-      <onentry>
-        <script>
-  			_util.dlg.perform('Application','login', _event.data);
-        </script>
-      </onentry>
-
-      <transition event="login_failed" target="LoginView" >
-        <assign location="_event" expr="_util.setIsRender(_event, false)"/>
-      </transition>
-
-      <transition event="user_logged_in" cond="mmir.User.getInstance() != null" target="MainView" />
-
-      <transition event="user_logged_in" cond="mmir.User.getInstance() == null" target="LoginView">
-        <assign location="_event" expr="_util.setIsRender(_event, false)"/>
-      </transition>
-
-    </state>
-
-    <state id="MainView" name="MainView">
-
-      <onentry>
-        <script>
-          var data = _event &amp;&amp; _event.data;
-          _util.dlg.render('Application', 'welcome', data);
-        </script>
-      </onentry>
-
-      <transition event="appointment_btn" name="appointment_btn" target="CreateAppointmentView" />
-
-      <transition event="back" name="back" target="LoginView">
-        <assign location="_event" expr="_util.setNavInHistory(_event)"/>
-      </transition>
-
-    </state>
-
-    <state id="CreateAppointmentView" name="CreateAppointmentView">
-
-      <initial>
-        <onentry>
-      		<script>
-            _util.dlg.render('Calendar', 'create_appointment', _event.data);
-      		</script>
-        </onentry>
-      </initial>
-
-      <transition event="save_appointment_btn" name="save_appointment_btn" target="save_appointment" />
-
-      <transition event="discard_appointment_btn" name="discard_appointment_btn" target="MainView">
-        <assign location="_event" expr="_util.setNavInHistory(_event)"/>
-      </transition>
-
-      <transition event="back" name="back" target="MainView">
-        <assign location="_event" expr="_util.setNavInHistory(_event)"/>
-      </transition>
-
-      <state id="save_appointment" name="save_appointment">
-
-        <onentry>
-      		<script>
-      	  		_util.dlg.perform('Calendar','saveAppointment');
-      		</script>
-        </onentry>
-
-        <transition target="MainView">
-
-          <assign location="_event" expr="_util.setNavInHistory(_event)"/>
-
-          <script>
-            if(!_event){//FIXME transition has no event object -> HACK inserting one manually
-              _event = {};
-              _events.push(_util.setNavInHistory(_event));
-            }
-            console.log('save_appointment -> ',_event);
-          </script>
-
-        </transition>
-      </state>
-
-    </state>
-
-
-	</state>
-	<!-- END: GUI  -->
-
-    <state id="Vui" name="Vui" initial="AsrInactive">
-
-        <datamodel>
-            <!-- mode for speech input:
+			<datamodel>
+				<!-- mode for speech input:
             		 "command" | "dictation"
 
             	DEFAULT: 'command'
              -->
-		    <data id="speech_mode" expr="'command'"/>
+				<data id="speech_mode" expr="'command'"/>
 
-            <!-- input mode for speech input:
+				<!-- input mode for speech input:
             		FLASY (default) | "guided" | "extended"
              -->
-		    <data id="input_mode" expr="''"/>
+				<data id="input_mode" expr="''"/>
 
-            <!-- ID attribute for DOM element that triggered speech input
+				<!-- ID attribute for DOM element that triggered speech input
 
             	DEFAULT: 'speech-cmd' (the speech command button)
              -->
-		    <data id="target_id" expr="'speech-cmd'"/>
+				<data id="target_id" expr="'speech-cmd'"/>
 
-            <!-- temporary ID:
+				<!-- temporary ID:
             		if this is set, then speech-input should be re-started
             		next for this DOM element
              -->
-		    <data id="temp_restart_speech_with_id" expr="''"/>
+				<data id="temp_restart_speech_with_id" expr="''"/>
 
-		    <!-- temporary ID:
+				<!-- temporary ID:
             		if this is set, then speech-input should be re-started
             		again, after reading has finished
              -->
-		    <data id="temp_resume_speech_with_id" expr="''"/>
+				<data id="temp_resume_speech_with_id" expr="''"/>
 
-		    <!-- temporary ID:
+				<!-- temporary ID:
             		if this is set, then speech-input should be re-started
             		again, after reading has finished with the prompt
              -->
-		    <data id="temp_prompt_data" expr="''"/>
+				<data id="temp_prompt_data" expr="''"/>
 
-			<!--  the ID / context-name for the ASR engine, DEFAULT: void i.e. use default context/engine -->
-		    <data id="asr_ctx" expr="void(0)"/>
+				<!--  the ID / context-name for the ASR engine, DEFAULT: void i.e. use default context/engine -->
+				<data id="asr_ctx" expr="void(0)"/>
 
-            <!--
+				<!--
             	flag for starting guidance of guided-input (instead of continuing it)
             	if this is set, the first call to continueGuidance will be "converted"
             	to start-guidance (instead of continue-guidance), and then be reset
              -->
-            <data id="start_guidance" expr="false"/>
+				<data id="start_guidance" expr="false"/>
 
-		</datamodel>
+			</datamodel>
 
-        <!--
+			<!--
         	set the ASR engine: either "nuance" or "android"
         	NOTE: you should cancel / stop speech-input before setting a new ASR context
          -->
-        <transition event="setAsrEngine" name="setAsrEngine">
-            <script>
+			<transition event="setAsrEngine" name="setAsrEngine">
+				<script>
                 if(_util.env.isCordovaEnv){
                 	var engine = _event.data;
                		asr_ctx = engine;
                 	_util.appConfig.set('speechEngine', engine);
                 }
-            </script>
-        </transition>
+				</script>
+			</transition>
 
-        <state id="AsrActive" name="AsrActive">
-        	<onentry>
-        	    <script>//<![CDATA[
+			<state id="AsrActive" name="AsrActive">
+				<onentry>
+					<script>//																								<![CDATA[
 
         	        if(_event.data){
 
@@ -530,9 +368,9 @@
    	        		_util.dlg.raise('showMicLevelsActive', {mode: speech_mode, targetId: speechTargetElem});
 
         	    //]]></script>
-        	</onentry>
-        	<onexit>
-        	    <script>//<![CDATA[
+				</onentry>
+				<onexit>
+					<script>//																								<![CDATA[
 
         	        if(_util.isDebugVui) console.info('stopping speech input ('+speech_mode+')...');
 
@@ -648,24 +486,24 @@
         	        	}
         	        ]);
         	    //]]></script>
-        	</onexit>
+				</onexit>
 
-        	<transition event="_setSpeechDefaults" name="_setSpeechDefaults">
-        	    <assign location="speech_mode" expr="_util.defaultSpeechMode" />
-        	    <assign location="target_id" expr="_util.defaultTargetId" />
-        	    <!-- raise event="showSpeechState"/-->
-        	</transition>
+				<transition event="_setSpeechDefaults" name="_setSpeechDefaults">
+					<assign location="speech_mode" expr="_util.defaultSpeechMode" />
+					<assign location="target_id" expr="_util.defaultTargetId" />
+					<!-- raise event="showSpeechState"/-->
+				</transition>
 
-        	<transition event="showSpeechState" name="showSpeechState">
-        	    <!-- script>
+				<transition event="showSpeechState" name="showSpeechState">
+					<!-- script>
         	        _util.ctrlSpeechIn.perform('showSpeechInputState', {state: true, mode: speech_mode});
         	    </script-->
-        	    <raise event="showSpeechStateActive"/>
-        	</transition>
+					<raise event="showSpeechStateActive"/>
+				</transition>
 
-        	<!--  DISABLED: un-used! -->
-        	<!-- transition event="setSpeechModeDictation" name="setSpeechModeDictation"-->
-        	    <!-- initate GUI updates for showing the mic-levels AND change the speech-mode to DICTATION >
+				<!--  DISABLED: un-used! -->
+				<!-- transition event="setSpeechModeDictation" name="setSpeechModeDictation"-->
+				<!-- initate GUI updates for showing the mic-levels AND change the speech-mode to DICTATION >
         	    <if cond="speech_mode !== 'dictation'">
         	    	<raise event="showMicLevelsInactive"/>
         	    	<assign location="speech_mode" expr="'dictation'" />
@@ -674,7 +512,7 @@
         	    	<assign location="speech_mode" expr="'dictation'" />
         	    </if>
         	    <raise event="showSpeechState"/-->
-        	    <!-- script>
+				<!-- script>
         	        if(speech_mode !== 'dictation'){
         	        	if(_util.isDebugVui) console.info('setSpeechModeDictation: changinge speech mode while ACTIVE: '+speech_mode+' -> dictation');
         	        	//_util.dlg.raise('showMicLevelsInactive');
@@ -687,8 +525,8 @@
         	    </script>
         	</transition-->
 
-        	<transition event="initSpeechInputMode" name="initSpeechInputMode" cond="speech_mode === 'command' || input_mode === 'guided'">
-        	    <script>//<![CDATA[
+				<transition event="initSpeechInputMode" name="initSpeechInputMode" cond="speech_mode === 'command' || input_mode === 'guided'">
+					<script>//																								<![CDATA[
 
         	        //NOTE: this event/transition should be triggered when a new page was entered
         	        //      -> if speech-input is active then, determine if guided-input, auto-proceed etc should be started for the page
@@ -733,31 +571,31 @@
 						});
 					}
         	    //]]></script>
-        	</transition>
+				</transition>
 
-        	<transition event="restartGuidedInput" name="restartGuidedInput">
-        	    <script>
+				<transition event="restartGuidedInput" name="restartGuidedInput">
+					<script>
         	        _util.dlg.perform(_util.guidedCtrlName, 'resetGuidedInput');
 					speech_mode = 'command';
 					_util.dlg.raise('initSpeechInputMode');
-        	    </script>
-        	</transition>
+					</script>
+				</transition>
 
-        	<transition event="setSpeechMode" name="setSpeechMode">
-        	    <assign location="speech_mode" expr="_event.data.mode" />
-        	</transition>
+				<transition event="setSpeechMode" name="setSpeechMode">
+					<assign location="speech_mode" expr="_event.data.mode" />
+				</transition>
 
-        	<transition event="setSpeechTarget" name="setSpeechTarget">
-        	    <assign location="target_id" expr="_event.data.targetId" />
-        	</transition>
+				<transition event="setSpeechTarget" name="setSpeechTarget">
+					<assign location="target_id" expr="_event.data.targetId" />
+				</transition>
 
-        	<transition event="setSpeechInputMode" name="setSpeechInputMode">
-        	    <assign location="input_mode" expr="_event.data.inputMode" />
-        	</transition>
+				<transition event="setSpeechInputMode" name="setSpeechInputMode">
+					<assign location="input_mode" expr="_event.data.inputMode" />
+				</transition>
 
-        	<!--  DISABLED: un-used! -->
-        	<!--transition event="setSpeechModeCommand" name="setSpeechModeCommand" -->
-        	    <!-- initate GUI updates for showing the mic-levels AND change the speech-mode to COMMAND >
+				<!--  DISABLED: un-used! -->
+				<!--transition event="setSpeechModeCommand" name="setSpeechModeCommand" -->
+				<!-- initate GUI updates for showing the mic-levels AND change the speech-mode to COMMAND >
         	    <if cond="speech_mode !== 'command'">
         	    	<raise event="showMicLevelsInactive"/>
         	    	<assign location="speech_mode" expr="'command'" />
@@ -766,7 +604,7 @@
         	    	<assign location="speech_mode" expr="'command'" />
         	    </if>
         	    <raise event="showSpeechState"/-->
-        	    <!-- script>
+				<!-- script>
         	        if(speech_mode !== 'command'){
         	        	console.info('setSpeechModeCommand: changinge speech mode while ACTIVE: '+speech_mode+' -> command');
         	        	//_util.dlg.raise('showMicLevelsInactive');
@@ -779,22 +617,22 @@
         	    </script>
         	</transition-->
 
-        	<!-- if speech_mode is unchanged: toggle the ACTIVE status for speech input -->
-        	<transition event="toggleSpeechInputState" name="toggleSpeechInputState" cond="_event.data.hint !== 'prompt' &amp;&amp; _event.data.mode === speech_mode &amp;&amp; _event.data.targetId === target_id" target="AsrInactive">
-        	    <assign location="speech_mode" expr="_event.data.mode" />
-        	    <assign location="target_id" expr="_event.data.targetId" />
-        	    <script>
+				<!-- if speech_mode is unchanged: toggle the ACTIVE status for speech input -->
+				<transition event="toggleSpeechInputState" name="toggleSpeechInputState" cond="_event.data.hint !== 'prompt' &amp;&amp; _event.data.mode === speech_mode &amp;&amp; _event.data.targetId === target_id" target="AsrInactive">
+					<assign location="speech_mode" expr="_event.data.mode" />
+					<assign location="target_id" expr="_event.data.targetId" />
+					<script>
 
         	        _util.applyInputMode(_event);
 
         	        if(_util.isDebugVui) console.debug('toggleSpeechInputState to INACTIVE, because of ',_event.data);
-        	    </script>
-        	</transition>
+					</script>
+				</transition>
 
 
-        	<!-- if speech_mode is unchanged, but prompt is started: toggle the ACTIVE status while reading, then restart speech input -->
-        	<transition event="toggleSpeechInputState" name="toggleSpeechInputState" cond="_event.data.hint === 'prompt'" target="AsrInactive">
-        	    <script>
+				<!-- if speech_mode is unchanged, but prompt is started: toggle the ACTIVE status while reading, then restart speech input -->
+				<transition event="toggleSpeechInputState" name="toggleSpeechInputState" cond="_event.data.hint === 'prompt'" target="AsrInactive">
+					<script>
 
         	        _util.applyInputMode(_event);
 
@@ -806,14 +644,14 @@
 	        	        temp_prompt_data = _event.data;
         	        }
 
-        	    </script>
-        	</transition>
+					</script>
+				</transition>
 
-        	<!-- if speech_mode IS changed: we do not want to actually stop speech-input, just "toggle" the speech_mode -->
-        	<transition event="toggleSpeechInputState" name="toggleSpeechInputState" cond="_event.data.hint !== 'prompt' &amp;&amp; _event.data.mode !== speech_mode || _event.data.targetId !== target_id" target="AsrInactive">
-        	    <!-- DISABLED: need to stop previous target first, before setting the new target_id:-->
-        	    <!--assign location="target_id" expr="_event.data.targetId" /-->
-        	    <script>
+				<!-- if speech_mode IS changed: we do not want to actually stop speech-input, just "toggle" the speech_mode -->
+				<transition event="toggleSpeechInputState" name="toggleSpeechInputState" cond="_event.data.hint !== 'prompt' &amp;&amp; _event.data.mode !== speech_mode || _event.data.targetId !== target_id" target="AsrInactive">
+					<!-- DISABLED: need to stop previous target first, before setting the new target_id:-->
+					<!--assign location="target_id" expr="_event.data.targetId" /-->
+					<script>
 
         	        _util.applyInputMode(_event);
 
@@ -839,76 +677,76 @@
         	        	//_util.dlg.raise('toggleSpeechInputState', {target_id: _event.data.targetId});
         	        	//_util.dlg.raise('showSpeechState');
         	        //}
-        	    </script>
+					</script>
 
-        	    <!-- if cond="_event.data.mode === 'dictation'">
+					<!-- if cond="_event.data.mode === 'dictation'">
         	        <raise event="setSpeechModeDictation"/>
         	    <else/>
         	        <raise event="setSpeechModeCommand"/>
         	    </if-->
 
-        	    <!-- initate GUI updates for showing the mic-levels AND change the speech-mode >
+					<!-- initate GUI updates for showing the mic-levels AND change the speech-mode >
        	    	<raise event="showMicLevelsInactive"/>
         	    <assign location="speech_mode" expr="_event.data.mode" />
        	    	<raise event="showMicLevelsActive"/>
 
         	    <raise event="showSpeechState"/-->
-        	</transition>
+				</transition>
 
-        	<transition event="speech-input-stopped" name="speech-input-stopped" target="AsrInactive">
-        	    <assign location="temp_restart_speech_with_id" expr="''" />
-        	</transition>
+				<transition event="speech-input-stopped" name="speech-input-stopped" target="AsrInactive">
+					<assign location="temp_restart_speech_with_id" expr="''" />
+				</transition>
 
-        	<!--
+				<!--
         	     stop speech-input only for now, but set "marker" in order to restart it again
         		 (will be evaluated, e.g. when reading stops, see reading-stopped)
         	 -->
-        	<transition event="pause-speech-input" name="pause-speech-input" target="AsrInactive">
-        	    <assign location="temp_resume_speech_with_id" expr="target_id"/>
-	        </transition>
+				<transition event="pause-speech-input" name="pause-speech-input" target="AsrInactive">
+					<assign location="temp_resume_speech_with_id" expr="target_id"/>
+				</transition>
 
-        	<!-- speech input will be stopped in onexit script: -->
-        	<transition event="cancel-speech-input" name="cancel-speech-input" target="AsrInactive">
-        	    <assign location="temp_restart_speech_with_id" expr="''" />
-        	    <!-- need to update GUI before resetting to default values: -->
-        	    <!-- raise event="showSpeechStateInactive"/>
+				<!-- speech input will be stopped in onexit script: -->
+				<transition event="cancel-speech-input" name="cancel-speech-input" target="AsrInactive">
+					<assign location="temp_restart_speech_with_id" expr="''" />
+					<!-- need to update GUI before resetting to default values: -->
+					<!-- raise event="showSpeechStateInactive"/>
         	    <raise event="_setSpeechDefaults"/-->
-        	</transition>
+				</transition>
 
-        	<!-- cancel ALL speech interactions (input and output) immediately! -->
-	        <transition event="cancel-speech-io" name="cancel-speech-io" target="AsrInactive">
-	            <assign location="temp_restart_speech_with_id" expr="''" />
-	            <assign location="temp_resume_speech_with_id" expr="''" />
-	            <assign location="temp_prompt_data" expr="''" />
-	            <assign location="temp_reading_data" expr="''" />
-	            <script>
+				<!-- cancel ALL speech interactions (input and output) immediately! -->
+				<transition event="cancel-speech-io" name="cancel-speech-io" target="AsrInactive">
+					<assign location="temp_restart_speech_with_id" expr="''" />
+					<assign location="temp_resume_speech_with_id" expr="''" />
+					<assign location="temp_prompt_data" expr="''" />
+					<assign location="temp_reading_data" expr="''" />
+					<script>
         	        _util.dlg.raise('stop-reading', {cancelGuidance: _util.isSpeechGuided(_event.data)});
         	    	//need to update GUI before resetting to default values:
         	    	//_util.dlg.raise('showSpeechStateInactive');
         	        //_util.dlg.raise('_setSpeechDefaults');
-	            </script>
-	        </transition>
+					</script>
+				</transition>
 
-        	<!-- speech input will actually be stopped in onexit script when transition moves to its target: -->
-        	<transition event="cancel-dictation" name="cancel-dictation" cond="speech_mode === 'dictation'" target="AsrInactive">
-        	    <assign location="temp_restart_speech_with_id" expr="''" />
-        	    <!-- need to update GUI before resetting to default values: -->
-        	    <!-- raise event="showSpeechStateInactive"/>
+				<!-- speech input will actually be stopped in onexit script when transition moves to its target: -->
+				<transition event="cancel-dictation" name="cancel-dictation" cond="speech_mode === 'dictation'" target="AsrInactive">
+					<assign location="temp_restart_speech_with_id" expr="''" />
+					<!-- need to update GUI before resetting to default values: -->
+					<!-- raise event="showSpeechStateInactive"/>
         	    <raise event="_setSpeechDefaults"/-->
-        	</transition>
+				</transition>
 
-        	<transition event="cancel-non-guided-dictation" name="cancel-non-guided-dictation" cond="speech_mode === 'dictation'">
-	        	<script>
+				<transition event="cancel-non-guided-dictation" name="cancel-non-guided-dictation" cond="speech_mode === 'dictation'">
+					<script>
 		           if(_util.isDebugVui) console.debug('active cancel-non-guided-dictation -> state: '+JSON.stringify(_util.createVuiOptions()));
-		        </script>
-        	    <if cond="input_mode !== 'guided'">
-        	        <!-- if not in guided-input mode: trigger "normal" cancel that stops current input and all suspended restarts too: -->
-        	    	<raise event="cancel-dictation"/>
-        	    <else/>
-        	    	<if cond="speech_mode !== _util.defaultSpeechMode || target_id !== _util.defaultTargetId">
-			        	<assign location="speech_mode" expr="_util.defaultSpeechMode" />
-		       	    	<assign location="target_id" expr="_util.defaultTargetId" />
-        	    	    <script>//<![CDATA[
+					</script>
+					<if cond="input_mode !== 'guided'">
+						<!-- if not in guided-input mode: trigger "normal" cancel that stops current input and all suspended restarts too: -->
+						<raise event="cancel-dictation"/>
+						<else/>
+						<if cond="speech_mode !== _util.defaultSpeechMode || target_id !== _util.defaultTargetId">
+							<assign location="speech_mode" expr="_util.defaultSpeechMode" />
+							<assign location="target_id" expr="_util.defaultTargetId" />
+							<script>//																																<![CDATA[
 
         	    	        if(_util.isDebugVui) console.debug('active cancel-non-guided-dictation -> input-mode is guided!');
 
@@ -921,29 +759,29 @@
         	    	        _util.dlg.raise('toggleSpeechInputState', options);
 
 				        //]]></script>
-				    <else/>
-			        	<assign location="speech_mode" expr="_util.defaultSpeechMode" />
-		       	    	<assign location="target_id" expr="_util.defaultTargetId" />
-		        	    <if cond="temp_restart_speech_with_id">
-		       	    		<assign location="temp_restart_speech_with_id" expr="_util.defaultTargetId" />
-		       	    	</if>
-        	    	</if>
-        	    </if>
-        	</transition>
+							<else/>
+							<assign location="speech_mode" expr="_util.defaultSpeechMode" />
+							<assign location="target_id" expr="_util.defaultTargetId" />
+							<if cond="temp_restart_speech_with_id">
+								<assign location="temp_restart_speech_with_id" expr="_util.defaultTargetId" />
+							</if>
+						</if>
+					</if>
+				</transition>
 
-        	<transition event="cancel-non-guided-dictation" name="cancel-non-guided-dictation" cond="speech_mode === 'command'">
-	        	<script>
+				<transition event="cancel-non-guided-dictation" name="cancel-non-guided-dictation" cond="speech_mode === 'command'">
+					<script>
 		           if(_util.isDebugVui) console.debug('active cancel-non-guided-dictation -> state: '+JSON.stringify(_util.createVuiOptions()));
-		        </script>
-	        	<assign location="temp_restart_speech_with_id" expr="''" />
-        	    <!-- need to update GUI before resetting to default values: -->
-        	    <!-- raise event="showSpeechStateInactive"/>
+					</script>
+					<assign location="temp_restart_speech_with_id" expr="''" />
+					<!-- need to update GUI before resetting to default values: -->
+					<!-- raise event="showSpeechStateInactive"/>
         	    <raise event="_setSpeechDefaults"/-->
-	        </transition>
+				</transition>
 
-        	<transition event="cancel-dictation-for-hidden" name="cancel-dictation-for-hidden" cond="speech_mode === 'dictation' &amp;&amp; _event.data">
-        	    <assign location="temp_restart_speech_with_id" expr="''" />
-        		<script>
+				<transition event="cancel-dictation-for-hidden" name="cancel-dictation-for-hidden" cond="speech_mode === 'dictation' &amp;&amp; _event.data">
+					<assign location="temp_restart_speech_with_id" expr="''" />
+					<script>
 
         		    //if(_util.isDebugVui) console.debug('cancel-dictation-for-hidden' + _event.data);
 
@@ -964,28 +802,28 @@
         		    		_util.dlg.raise('showSpeechState');
         		    	}
         		    }
-        		</script>
-        	</transition>
+					</script>
+				</transition>
 
-    	</state>
+			</state>
 
-    	<state id="AsrInactive" name="AsrInactive">
-        	<onentry>
-        	    <script>
+			<state id="AsrInactive" name="AsrInactive">
+				<onentry>
+					<script>
         	        if(_util.isDebugVui) console.info('speech deactivated, stopping recognition...');
         	        _util.dlg.raise('showMicLevelsInactive');
-        	    </script>
-        	    <raise event="showSpeechState"/>
-        	</onentry>
+					</script>
+					<raise event="showSpeechState"/>
+				</onentry>
 
-        	<transition event="_setSpeechDefaults" name="_setSpeechDefaults">
-        	    <assign location="speech_mode" expr="_util.defaultSpeechMode" />
-        	    <assign location="target_id" expr="_util.defaultTargetId" />
-        	    <!-- raise event="showSpeechState"/-->
-        	</transition>
+				<transition event="_setSpeechDefaults" name="_setSpeechDefaults">
+					<assign location="speech_mode" expr="_util.defaultSpeechMode" />
+					<assign location="target_id" expr="_util.defaultTargetId" />
+					<!-- raise event="showSpeechState"/-->
+				</transition>
 
-        	<transition event="showSpeechState" name="showSpeechState">
-        	    <script>
+				<transition event="showSpeechState" name="showSpeechState">
+					<script>
         	        //_util.ctrlSpeechIn.perform('showSpeechInputState', {state: false, mode: speech_mode});
 
         	        if(_util.isDebugVui) console.debug(
@@ -993,24 +831,24 @@
         	        		+ '\n\t state: '+JSON.stringify(_util.createVuiOptions())
         	        		+ '\n\t temp-restart: '+ temp_restart_speech_with_id
         	        );
-        	    </script>
-        	    <if cond="temp_restart_speech_with_id || temp_prompt_data">
-        	        <!-- these conditions mean, that
+					</script>
+					<if cond="temp_restart_speech_with_id || temp_prompt_data">
+						<!-- these conditions mean, that
         	        		(1) ASR will get restarted (soon), or
         	        		(2) its GUI is used for showing feedback (e.g. reading a system-prompt)
         	        	-> so show state as ACTIVE:
         	        -->
-	        	    <raise event="showSpeechStateActive"/>
-	        	<else/>
-	        	    <raise event="showSpeechStateInactive"/>
-        	    </if>
-        	</transition>
+						<raise event="showSpeechStateActive"/>
+						<else/>
+						<raise event="showSpeechStateInactive"/>
+					</if>
+				</transition>
 
-        	<transition event="initSpeechInputMode" name="initSpeechInputMode" cond="input_mode === 'guided' &amp;&amp; temp_restart_speech_with_id">
-        	    <assign location="start_guidance" expr="true"/>
-        	</transition>
+				<transition event="initSpeechInputMode" name="initSpeechInputMode" cond="input_mode === 'guided' &amp;&amp; temp_restart_speech_with_id">
+					<assign location="start_guidance" expr="true"/>
+				</transition>
 
-        	<!-- transition event="initSpeechInputMode" name="initSpeechInputMode" cond="speech_mode === 'command'">
+				<!-- transition event="initSpeechInputMode" name="initSpeechInputMode" cond="speech_mode === 'command'">
         	    <script>
         	        console.error(
         	        	'INactive -> initSpeechInputMode, event: '+ JSON.stringify(_event)
@@ -1020,53 +858,53 @@
         	    </script>
         	</transition-->
 
-        	<!--  DISABLED: un-used! -->
-        	<!--transition event="setSpeechModeDictation" name="setSpeechModeDictation">
+				<!--  DISABLED: un-used! -->
+				<!--transition event="setSpeechModeDictation" name="setSpeechModeDictation">
         	    <assign location="speech_mode" expr="'dictation'" />
         	    <assign location="target_id" expr="_event.data.targetId" />
         	    <raise event="showSpeechState"/>
         	</transition-->
 
-        	<!--  DISABLED: un-used! -->
-        	<!--transition event="setSpeechModeCommand" name="setSpeechModeCommand">
+				<!--  DISABLED: un-used! -->
+				<!--transition event="setSpeechModeCommand" name="setSpeechModeCommand">
         	    <assign location="speech_mode" expr="'command'" />
         	    <assign location="target_id" expr="_event.data.targetId" />
         	    <raise event="showSpeechState"/>
         	</transition-->
 
-        	<transition event="restartGuidedInput" name="restartGuidedInput" target="AsrActive">
-        	    <script>
+				<transition event="restartGuidedInput" name="restartGuidedInput" target="AsrActive">
+					<script>
         	        //re-trigger the event when it has changed into AsrActive state:
         	        // (setTimeout should not be necessary, but just to be save)
         	        setTimeout(function(){
 						_util.dlg.raise('restartGuidedInput');
 					}, 50);
-        	    </script>
-        	</transition>
+					</script>
+				</transition>
 
-        	<transition event="setSpeechMode" name="setSpeechMode">
-        	    <assign location="speech_mode" expr="_event.data.mode" />
-        	</transition>
+				<transition event="setSpeechMode" name="setSpeechMode">
+					<assign location="speech_mode" expr="_event.data.mode" />
+				</transition>
 
-        	<transition event="setSpeechTarget" name="setSpeechTarget">
-        	    <assign location="target_id" expr="_event.data.targetId" />
-        	</transition>
+				<transition event="setSpeechTarget" name="setSpeechTarget">
+					<assign location="target_id" expr="_event.data.targetId" />
+				</transition>
 
-        	<transition event="setSpeechInputMode" name="setSpeechInputMode">
-        	    <assign location="input_mode" expr="_event.data.inputMode" />
-        	</transition>
+				<transition event="setSpeechInputMode" name="setSpeechInputMode">
+					<assign location="input_mode" expr="_event.data.inputMode" />
+				</transition>
 
-        	<transition event="toggleSpeechInputState" name="toggleSpeechInputState" cond="_event.data.hint !== 'prompt'" target="AsrActive">
-        	    <!-- assign location="target_id" expr="_event.data.targetId" /-->
-        	    <script>
+				<transition event="toggleSpeechInputState" name="toggleSpeechInputState" cond="_event.data.hint !== 'prompt'" target="AsrActive">
+					<!-- assign location="target_id" expr="_event.data.targetId" /-->
+					<script>
         	        _util.applyInputMode(_event);
-        	    </script>
-        	</transition>
+					</script>
+				</transition>
 
-        	<!-- TODO add condition that checks, that user has not disabled "welcome" prompt when opening the speech-command-dialog -->
-        	<transition event="toggleSpeechInputState" name="toggleSpeechInputState" cond="_event.data.hint === 'prompt'">
-        	    <!-- assign location="target_id" expr="_event.data.targetId" /-->
-        	    <script>
+				<!-- TODO add condition that checks, that user has not disabled "welcome" prompt when opening the speech-command-dialog -->
+				<transition event="toggleSpeechInputState" name="toggleSpeechInputState" cond="_event.data.hint === 'prompt'">
+					<!-- assign location="target_id" expr="_event.data.targetId" /-->
+					<script>
 
         	        _util.applyInputMode(_event);
 
@@ -1094,128 +932,128 @@
 
         	        _util.dlg.raise('read-prompt', options);
 
-        	    </script>
-        	</transition>
+					</script>
+				</transition>
 
-        	<transition event="cancel-non-guided-dictation" name="cancel-non-guided-dictation">
+				<transition event="cancel-non-guided-dictation" name="cancel-non-guided-dictation">
 
-        	    <script>
+					<script>
 		           if(_util.isDebugVui) console.debug('INactive cancel-non-guided-dictation -> state: '+JSON.stringify(_util.createVuiOptions()));
-		        </script>
+					</script>
 
-	        	<assign location="speech_mode" expr="_util.defaultSpeechMode" />
-	        	<assign location="target_id" expr="_util.defaultTargetId" />
+					<assign location="speech_mode" expr="_util.defaultSpeechMode" />
+					<assign location="target_id" expr="_util.defaultTargetId" />
 
-	        	<if cond="temp_restart_speech_with_id">
-        	    	<assign location="temp_restart_speech_with_id" expr="_util.defaultTargetId" />
-       	    	</if>
+					<if cond="temp_restart_speech_with_id">
+						<assign location="temp_restart_speech_with_id" expr="_util.defaultTargetId" />
+					</if>
 
-        	</transition>
+				</transition>
 
-			<transition event="cancel-dictation" name="cancel-dictation" cond="speech_mode === 'dictation'">
-        	    <if cond="temp_restart_speech_with_id">
-        	        <!-- prompt may be active: do cancel it -->
-        	    	<assign location="temp_restart_speech_with_id" expr="''" />
-	            	<raise event="stop-reading" />
-       	    	</if>
-        	    <raise event="showSpeechStateInactive"/>
-        	</transition>
+				<transition event="cancel-dictation" name="cancel-dictation" cond="speech_mode === 'dictation'">
+					<if cond="temp_restart_speech_with_id">
+						<!-- prompt may be active: do cancel it -->
+						<assign location="temp_restart_speech_with_id" expr="''" />
+						<raise event="stop-reading" />
+					</if>
+					<raise event="showSpeechStateInactive"/>
+				</transition>
 
-        	<!-- if INACTIVE treat same as cancel-speech-input:  -->
-        	<transition event="pause-speech-input" name="pause-speech-input">
-	            <raise event="cancel-speech-input" />
-	        </transition>
+				<!-- if INACTIVE treat same as cancel-speech-input:  -->
+				<transition event="pause-speech-input" name="pause-speech-input">
+					<raise event="cancel-speech-input" />
+				</transition>
 
-        	<!--  should not be neccessary within this state, but just to be save:  define cancel speech input transition: -->
-        	<transition event="cancel-speech-input" name="cancel-speech-input">
-        	    <!-- FIXME: this should work: assign location="temp_restart_speech_with_id" expr="''" /-->
-		        <script>
+				<!--  should not be neccessary within this state, but just to be save:  define cancel speech input transition: -->
+				<transition event="cancel-speech-input" name="cancel-speech-input">
+					<!-- FIXME: this should work: assign location="temp_restart_speech_with_id" expr="''" /-->
+					<script>
         	        _util.dlg.raise('showMicLevelsInactive');
 		            _util.media.perform(asr_ctx, 'cancelRecognition');
 
-		        </script>
-		    </transition>
+					</script>
+				</transition>
 
-        	<!-- cancel ALL speech interactions (input and output) immediately! -->
-	        <transition event="cancel-speech-io" name="cancel-speech-io">
-	            <assign location="temp_restart_speech_with_id" expr="''" />
-	            <assign location="temp_resume_speech_with_id" expr="''" />
-	            <assign location="temp_prompt_data" expr="''" />
-	            <assign location="temp_reading_data" expr="''" />
-	            <script>
+				<!-- cancel ALL speech interactions (input and output) immediately! -->
+				<transition event="cancel-speech-io" name="cancel-speech-io">
+					<assign location="temp_restart_speech_with_id" expr="''" />
+					<assign location="temp_resume_speech_with_id" expr="''" />
+					<assign location="temp_prompt_data" expr="''" />
+					<assign location="temp_reading_data" expr="''" />
+					<script>
         	        _util.dlg.raise('stop-reading', {cancelGuidance: _util.isSpeechGuided(_event.data)});
         	        _util.dlg.raise('cancel-speech-input');
-	            </script>
-	        </transition>
+					</script>
+				</transition>
 
-    	</state>
-    </state>
-    <!-- END OF Vui -->
+			</state>
+		</state>
+		<!-- END OF Vui -->
 
-    <state id="Reading" name="Reading">
+		<state id="Reading" name="Reading">
 
-        <datamodel>
-            <!-- flag that indicates if TTS is currently active  -->
-		    <data id="reading_status" expr="false"/>
-            <!-- the (command) ID for the reading-target (i.e. what should be read) -->
-		    <data id="reading_id" expr="''"/>
-            <!-- the ID for the reading-context (if empty/unset, the pageId is used) -->
-        <data id="dialog_id" expr="''"/>
-
-
-		    <data id="temp_reading_data" expr="''"/>
-		</datamodel>
+			<datamodel>
+				<!-- flag that indicates if TTS is currently active  -->
+				<data id="reading_status" expr="false"/>
+				<!-- the (command) ID for the reading-target (i.e. what should be read) -->
+				<data id="reading_id" expr="''"/>
+				<!-- the ID for the reading-context (if empty/unset, the pageId is used) -->
+				<data id="dialog_id" expr="''"/>
 
 
-        <transition event="readAll" name="readAll">
-            <script>
+				<data id="temp_reading_data" expr="''"/>
+			</datamodel>
+
+
+			<transition event="readAll" name="readAll">
+				<script>
                 _util.dlg.raise('read', {readingId: 'all'});
-            </script>
-        </transition>
+				</script>
+			</transition>
 
-        <transition event="readField" name="readField">
-            <script>
+			<transition event="readField" name="readField">
+				<script>
                 if(_event.data || _event.data.field){
                 	_util.dlg.raise('read', {readingId: 'field-' + _event.data.field});
                 }
                 else {
                 	console.error('Cannot invoke readField: invalid data.field value ', _event.data);
                 }
-            </script>
-        </transition>
+				</script>
+			</transition>
 
-        <transition event="read-prompt" name="read-prompt-inactive" cond="!reading_status &amp;&amp; (!_event.data || !_event.data.stopReading)">
-            <script>
+			<transition event="read-prompt" name="read-prompt-inactive" cond="!reading_status &amp;&amp; (!_event.data || !_event.data.stopReading)">
+				<script>
                 if(_util.isDebugVui) console.warn('read-prompt-inactive -> ',_event.data);
             	_util.dlg.raise('read', _event.data);
-            </script>
-        </transition>
+				</script>
+			</transition>
 
-        <transition event="read-prompt" name="read-prompt-active" cond="reading_status">
+			<transition event="read-prompt" name="read-prompt-active" cond="reading_status">
 
-        	<!-- if the active reading is not for the same target,
+				<!-- if the active reading is not for the same target,
         		 re-start for it after the current one has stopped.
 
         		 (but also not restart, if reading has been explicitly stopped)
         	 -->
-            <if cond="_event.data.readingId !== reading_id &amp;&amp; !_event.data.stopReading">
-            	<assign location="temp_reading_data" expr="_event.data" />
-              <else/>
-              <if cond="_event.data.readingId === reading_id &amp;&amp; _event.data.cancelActivePrompts">
-              	<assign location="temp_reading_data" expr="_event.data" />
-              </if>
-            </if>
+				<if cond="_event.data.readingId !== reading_id &amp;&amp; !_event.data.stopReading">
+					<assign location="temp_reading_data" expr="_event.data" />
+					<else/>
+					<if cond="_event.data.readingId === reading_id &amp;&amp; _event.data.cancelActivePrompts">
+						<assign location="temp_reading_data" expr="_event.data" />
+					</if>
+				</if>
 
-            <script>
+				<script>
                 if(_util.isDebugVui) console.warn('read-prompt-active, temp_reading_data -> ',temp_reading_data);
-            </script>
-            <raise event="stop-reading"/>
-        </transition>
+				</script>
+				<raise event="stop-reading"/>
+			</transition>
 
-        <transition event="read" name="read-inactive" cond="!reading_status">
-            <assign location="reading_id" expr="_event.data.readingId" />
-            <assign location="dialog_id" expr="_event.data.contextId" />
-            <script>
+			<transition event="read" name="read-inactive" cond="!reading_status">
+				<assign location="reading_id" expr="_event.data.readingId" />
+				<assign location="dialog_id" expr="_event.data.contextId" />
+				<script>
                 if(_util.isDebugVui) console.debug('read-inactive: reading '+page_id,' ', _event.data);
 
                 //set status immedately! ... it is also (again) set in reading-started...
@@ -1233,20 +1071,20 @@
             		reading_status = false;
             		_util.dlg.perform(_util.readCtrlName, 'showReadingStatus', {contextId: dialog_id || page_id, readingId: reading_id, active: reading_status, targetId: temp_restart_speech_with_id});
             	}
-            </script>
-        </transition>
+				</script>
+			</transition>
 
-        <transition event="read" name="read-active" cond="reading_status">
-            <script>
+			<transition event="read" name="read-active" cond="reading_status">
+				<script>
                 console.debug('read-active -> tried to read prompt while still active (stopping current prompt); requested prompt: ',_event.data);
-            </script>
-            <!-- DISABLED: stop reading for the actual/current target, and not some new target ... -->
-            <!-- assign location="reading_id" expr="_event.data.readingId" /-->
-            <raise event="stop-reading"/>
-        </transition>
+				</script>
+				<!-- DISABLED: stop reading for the actual/current target, and not some new target ... -->
+				<!-- assign location="reading_id" expr="_event.data.readingId" /-->
+				<raise event="stop-reading"/>
+			</transition>
 
-        <transition event="stop-reading" name="stop-reading">
-            <script>
+			<transition event="stop-reading" name="stop-reading">
+				<script>
 
                 //console.debug('stop reading!');
                 var data = {contextId: dialog_id || page_id, readingId: reading_id, targetId: temp_restart_speech_with_id};
@@ -1258,20 +1096,20 @@
                 }
 
             	_util.dlg.perform(_util.readCtrlName, 'stopReading', data);
-            </script>
-        </transition>
+				</script>
+			</transition>
 
-        <transition event="reading-started" name="reading-started">
-            <script>
+			<transition event="reading-started" name="reading-started">
+				<script>
                 //console.debug('reading has started...');
             	reading_status = true;
 
             	_util.dlg.perform(_util.readCtrlName, 'showReadingStatus', {contextId: dialog_id || page_id, readingId: reading_id, active: reading_status, targetId: temp_restart_speech_with_id});
-            </script>
-        </transition>
+				</script>
+			</transition>
 
-        <transition event="reading-stopped" name="reading-stopped">
-            <script>
+			<transition event="reading-stopped" name="reading-stopped">
+				<script>
                 //console.debug('reading has stopped.');
             	reading_status = false;
 
@@ -1294,56 +1132,56 @@
             		_util.dlg.raise('showSpeechState');
             	}
 
-            </script>
-        </transition>
+				</script>
+			</transition>
 
-    </state>
-    <!-- end of state Reading -->
+		</state>
+		<!-- end of state Reading -->
 
-    <state id="VoiceCtrl" name="VoiceCtrl" initial="DefaultCmds">
+		<state id="VoiceCtrl" name="VoiceCtrl" initial="DefaultCmds">
 
 
-        <datamodel>
-            <!-- the ID for the (web) page that is currently displayed / actice
+			<datamodel>
+				<!-- the ID for the (web) page that is currently displayed / actice
             	 e.g. "wik-frontpage"
              -->
-		    <data id="page_id" expr="''"/>
-            <!-- IF set, then DOM element with this ID should be used for PREVIOUS-navigation instead of the generic BACK -->
-		    <data id="prev_id" expr="''"/>
-            <!-- IF set, then DOM element with this ID should be used for NEXT-navigation instead of the generic (history) FORWARD -->
-		    <data id="next_id" expr="''"/>
-		</datamodel>
+				<data id="page_id" expr="''"/>
+				<!-- IF set, then DOM element with this ID should be used for PREVIOUS-navigation instead of the generic BACK -->
+				<data id="prev_id" expr="''"/>
+				<!-- IF set, then DOM element with this ID should be used for NEXT-navigation instead of the generic (history) FORWARD -->
+				<data id="next_id" expr="''"/>
+			</datamodel>
 
-        <state id="DefaultCmds" name="DefaultCmds">
+			<state id="DefaultCmds" name="DefaultCmds">
 
-            <onentry>
-        	    <script>
+				<onentry>
+					<script>
         	        console.info('Enabled default voice commands.');
-        	    </script>
-        	</onentry>
+					</script>
+				</onentry>
 
-            <initial>
-                <transition target="InitialDefaultCmds"/>
-            </initial>
+				<initial>
+					<transition target="InitialDefaultCmds"/>
+				</initial>
 
-            <transition event="enter" name="enter_EMTPY"      cond="!_event.data" target="InitialDefaultCmds">
-            	<assign location="page_id" expr="''" />
-            </transition>
+				<transition event="enter" name="enter_EMTPY" cond="!_event.data" target="InitialDefaultCmds">
+					<assign location="page_id" expr="''" />
+				</transition>
 
-            <transition event="enter" name="enter_NOT-EMPTY"  cond="_event.data">
-            	<assign location="page_id" expr="_event.data" />
-            	<!-- start page-dependend settings via entered-event: -->
-            	<raise event="entered"/>
-            </transition>
+				<transition event="enter" name="enter_NOT-EMPTY" cond="_event.data">
+					<assign location="page_id" expr="_event.data" />
+					<!-- start page-dependend settings via entered-event: -->
+					<raise event="entered"/>
+				</transition>
 
-            <!-- active special commands for the testing-area -->
-            <!-- >transition event="entered" name="entered_TEST-SPEECHTEST" cond="page_id === 'test__speech-test'" target="TestSpeechTestCmds">
+				<!-- active special commands for the testing-area -->
+				<!-- >transition event="entered" name="entered_TEST-SPEECHTEST" cond="page_id === 'test__speech-test'" target="TestSpeechTestCmds">
             </transition-->
 
-            <state id="InitialDefaultCmds" name="InitialDefaultCmds">
-            </state>
+				<state id="InitialDefaultCmds" name="InitialDefaultCmds">
+				</state>
 
-            <!-- transition event="nav" name="nav">
+				<!-- transition event="nav" name="nav">
                 <script>//<![CDATA[
                 	var success = _util.ctrlSite.perform('navigate', _event.data);
 
@@ -1353,7 +1191,7 @@
                //]]> </script>
             </transition-->
 
-            <!-- transition event="show" name="show">
+				<!-- transition event="show" name="show">
                 <script>//<![CDATA[
 
                 	var success = _util.ctrlSite.perform('show', _event.data);
@@ -1386,13 +1224,13 @@
                 //]]></script>
             </transition-->
 
-        </state>
-    	<!-- END of state DefaultCmds -->
+			</state>
+			<!-- END of state DefaultCmds -->
 
 
-    </state>
-    <!-- END of state VoiceCtrl -->
+		</state>
+		<!-- END of state VoiceCtrl -->
 
-</parallel>
+	</parallel>
 
 </scxml>

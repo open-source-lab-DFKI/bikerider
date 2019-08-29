@@ -12,7 +12,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { MmirProvider } from '../providers/mmir';
 import { VoiceUIProvider } from '../providers/mmir';
 import { AppConfig } from '../providers/app-config';
-import { UserAuthProvider } from './../providers/user-auth';
 import { RestApiProvider } from '../providers/rest-api/rest-api';
 
 @NgModule({
@@ -32,7 +31,7 @@ import { RestApiProvider } from '../providers/rest-api/rest-api';
     MyApp,
   ],
   providers: [
-    Storage, MmirProvider, VoiceUIProvider, AppConfig, UserAuthProvider,
+    Storage, MmirProvider, VoiceUIProvider, AppConfig,
     StatusBar, SplashScreen, Geolocation,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     RestApiProvider

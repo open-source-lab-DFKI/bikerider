@@ -2,50 +2,32 @@
 <html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8">
-  <title>Ionic App</title>
+  <title>BikeRider App</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="format-detection" content="telephone=no">
   <meta name="msapplication-tap-highlight" content="no">
-
   <link rel="icon" type="image/x-icon" href="assets/icon/favicon.ico">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#4e8ef7">
 
   <!-- cordova.js required for cordova apps -->
   <script src="cordova.js"></script>
-
-  <!-- un-comment this code to enable service worker
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(() => console.log('service worker installed'))
-        .catch(err => console.error('Error', err));
-    }
-  </script>-->
-
   <link href="build/main.css" rel="stylesheet">
-  
-  
-
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"/>
- 
-  <script src= 'https://maps.googleapis.com/maps/api/js?key=AIzaSyDQqO0CEw4yg5mZWSteNGFNWiMRrXYHp8E&libraries=geometry,places'></script>
-
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"/> 
+  <script src= 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBe965a7EQDNRN6wSaWNsAsu5P-w0UJdzk&libraries=geometry,places'></script>
 </head>
 <body>
-
   <!-- Ionic's root component and where the app will load -->
   <ion-app></ion-app>
 
   <!-- The polyfills js is generated during the build process -->
   <script src="build/polyfills.js"></script>
   <link href="https://unpkg.com/leaflet@1.1.0/dist/leaflet.css" rel="stylesheet">
+
   <!-- mmir resources -->
   <script type="text/javascript" src="assets/mmirf/core.js"></script>
   <script type="text/javascript" src="assets/appjs/preinit.js"></script>
   <script type="text/javascript" src="assets/mmirf/vendor/libs/require.js" data-main="assets/mmirf/mainConfig" ></script>
-  
-
   <script type="text/javascript" src="assets/app.js"> </script>
 
   <!-- The vendor js is generated during the build process
