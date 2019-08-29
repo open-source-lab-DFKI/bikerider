@@ -26,9 +26,14 @@ This section describes the setup for the local development environment.
 
 ### Source Code & Project Structure
 
-Check out the source code from Gitlab: `git clone ssh://git@gitlab-cos.b.dfki.de:10022/smart-mobility/opensourcelabmobilityapp.git`. Thereafter, switch to the correct branch: `git checkout ionic-gui`.
+Check out the source code from Gitlab and switch to the correct branch:
+```
+git clone ssh://git@gitlab-cos.b.dfki.de:10022/smart-mobility/opensourcelabmobilityapp.git
 
-Take a look on the page Ionic docs >> [Project Structure](https://ionicframework.com/docs/v3/intro/tutorial/project-structure/) to get an idea on how Ionic apps usually look like and the development conventions. Moreover, it explains the roles of the individual components.
+git checkout ionic-gui
+``` 
+
+Take a look on the page [*Project Structure*](https://ionicframework.com/docs/v3/intro/tutorial/project-structure/) of the Ionic docs to get an idea on how Ionic apps usually look like and the development conventions. Moreover, it explains the roles of the individual components.
 
 > **Important**: Compared to Cordova projects, the source files are located in `/src` and not in `/www`. The `/www` directory contains generated files which will be overwritten when building the project.
   
@@ -38,39 +43,36 @@ So far, the only added view is Home (see sidebar in burger menu). It contains th
 
 The following list shows software prerequisites for development, and for running the app. Following, the software that needs to be installed manually before installing the remaining packages automatically:
 
-- Android SDK
+- **Android SDK**
    - The easiest way is to use the Android Studio (GUI) which can be found on [Android Developer](https://developer.android.com/studio/index.html#downloads), and then to install the `Android SDK Build Tools version >= 26.x`
     - Alternatively, you can use the sdk-tools (see section [*Command line tools only*](https://developer.android.com/studio/index.html#downloads)) and install the build tools using the `sdkmanager`:
       - See the available versions of the build-tools: `sdkmanager --list | grep build`
-      - Install a specific version: `sdkmanager "build-tools;29.0.2"`, or see the [Android user guide](https://developer.android.com/studio/command-line/sdkmanager#install_packages) for details
+      - Install a specific version: `sdkmanager "build-tools;29.0.2"`
+      - See the [Android user guide](https://developer.android.com/studio/command-line/sdkmanager#install_packages) for more details
   
-- [Gradle](https://gradle.org/) – tested with v5.6.1
+- **Gradle** – tested with v5.6.1
   - This is only needed if you did not install Android Studio, as Gradle is part of Android Studio 
   - Gradle is available on its official [*Releases*](https://gradle.org/releases/) page
 
-- [Java JDK 8](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) – tested with v1.8.0_191
-  - The latest Java version will not work, therefore it is important to stick to Java8.
+- **Java JDK 8** – tested with v1.8.0_191
+  - The latest Java version will not work, therefore it is important to stick to Java 8.
+  - Java8 installer is available at [oracle.com](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
   - Make sure that `java -version` prints a version number starting with `1.8.x`.
 
-- Apache ANT – tested with v1.10.5 
-  - ANT just needs to be extracted and added to the path
-  - Set `ANT_HOME` to the Apache ANT directory, e.g., on Windows do `set ANT_HOME=C:\tools\apache-ant-1.10.5`
+- **Apache ANT** – tested with v1.10.5 
+  - Windows: ANT just needs to be extracted and added to the path
+    - Download the ZIP version from **ant.apache.org**
+    - Set `ANT_HOME` to the Apache ANT directory, e.g., `set ANT_HOME=C:\tools\apache-ant-1.10.5`
+  - MacOS: Use brew and run `brew install ant`
 
-- [Node.js](https://nodejs.org/en/) – tested with v12.9.1
-    - Install using the installers available at [*Previous Releases*](https://nodejs.org/en/download/releases/)
+- **Node.js** – tested with v12.9.1
+    - Install using the installers available at [nodejs.org](https://nodejs.org/en/)
 
-- [Cordova CLI](https://cordova.apache.org/docs/en/9.x/guide/cli/index.html#installing-the-cordova-cli) – tested with v8.1.2
-   - Install using `npm install -g cordova@8.1.2`
+- **Cordova CLI** – tested with v9.0.0
+   - Install using `npm install -g cordova`
 
-- [Ionic](https://ionicframework.com/) framework
-   - Install using: `npm install -g ionic@3.4.0`  
-   - Then run `ionic` and accept using `Y` the question asking whether to install the project's dependencies.
-
-After installing everything, run `npm install` to install the required dependencies. 
-
-Next, run `ionic serve` and accept the message *? Looks like this is an Ionic Angular project, would you like to install @ionic/cli-plugin-ionic-angular and continue? (Y/n)* by typing `Y`. At the end, a browser window with the web app should open automatically. Thereafter, stop the app server by pressing CTRL+C.
-
-Lastly, run `ionic cordova build android`. A message like *? The plugin @ionic/cli-plugin-cordova is not installed. Would you like to install it and continue? (Y/n)* should appear. 
+- **Ionic** framework – tested with v5.2.6
+   - Install using: `npm install -g ionic`  
 
 ## Recommended Configuration
 
@@ -86,7 +88,7 @@ Autosave can be disabled by executing: `cordova config set autosave false`.
 
 This section explains the steps to run the application in a browser (e.g., for debugging) and to build an APK that can be installed on an Android device.
 
-First of all, it is needed to install all dependencies by running `rm -rf node_modules/ && npm install` in the project's root directory.
+**NOTE:** The instructions following assume that you have installed **all prerequisites** described in the [*Install the Prerequisites*](#install-the-prerequisites) section.
 
 ### Browser
 
@@ -96,7 +98,9 @@ The app accesses foreign domains. To enable that, the CORS policy must be disabl
 
   - For Firefox, the simplest way is to use an extension called [CORS Everywhere](https://addons.mozilla.org/de/firefox/addon/cors-everywhere/).
 
-To start the development server, run `ionic serve` (opens browser automatically) or `ionic serve -b` (does not open browser), which will start the application and make it available, by default on `localhost:8100`. The output on the console prints the actual address that is used:
+Run `ionic` in the project's root directory and accept using key `Y` the installation of the project's dependencies.
+
+Next, run `ionic serve` and accept the message *Looks like this is an Ionic Angular project, would you like to install @ionic/cli-plugin-ionic-angular and continue? (Y/n)* by typing `Y`. At the end, a browser window with the web app should open automatically. The output on the console prints the actual address that is used: 
 
 ```
 pc:work_bikerider-frontend patrick$ ionic serve
@@ -114,7 +118,9 @@ pc:work_bikerider-frontend patrick$ ionic serve
        Local: http://localhost:8100           << address to access the web app
 ```
 
-Changes in `src` will automatically be detected, compiled, and the served web page will be updated. There is no need to stop and rerun the application.
+You can stop the app server by pressing CTRL+C. As an alternative to `ionic serve` which opens the browser automatically, you can use `ionic serve -b` which does not open your default browser.
+
+Changes in `src` will automatically be detected, compiled, and the served web page will be updated. In general, there is no need to stop and restart the application server during development.
 
 ### Android Device
 
@@ -125,6 +131,8 @@ To build the Android APK, the following steps are required to do **once**:
   - To outline all pre-installed plugins in the project environment, type: `cordova platforms ls`.
 
 Thereafter the app is ready to be build. To build an Android APK, run `ionic cordova build android` for building the Android APK, or `ionic cordova run android` for building the APK and installing it on the first available Android device.
+
+A message like *The plugin @ionic/cli-plugin-cordova is not installed. Would you like to install it and continue? (Y/n)* should appear. Accept it by typing `Y`.
 
 ## Troubleshooting
 
@@ -176,3 +184,4 @@ If you receive the error message *Error: Source path does not exist: resources\a
 In this case you can either 
 - run `ionic cordova resources` that updates the resource configuration and corrects the paths, 
 - or manually edit the file `config.xml`. The paths in the lines starting with `<icon ...` must be corrected according to the platform the application is running. 
+
