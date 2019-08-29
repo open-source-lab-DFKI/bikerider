@@ -26,11 +26,11 @@ This section describes the setup for the local development environment.
 
 ### Source Code & Project Structure
 
-Check out the source code from Gitlab and switch to the correct branch:
+Check out the source code from Gitlab create a new development branch:
 ```
 git clone ssh://git@gitlab-cos.b.dfki.de:10022/smart-mobility/opensourcelabmobilityapp.git
 
-git checkout ionic-gui
+git checkout -b dev
 ``` 
 
 Take a look on the page [*Project Structure*](https://ionicframework.com/docs/v3/intro/tutorial/project-structure/) of the Ionic docs to get an idea on how Ionic apps usually look like and the development conventions. Moreover, it explains the roles of the individual components.
@@ -126,8 +126,8 @@ Changes in `src` will automatically be detected, compiled, and the served web pa
 
 To build the Android APK, the following steps are required to do **once**:
 
-- Add the Android platform to Cordova: `cordova platform add android@5`. 
-  - Notice that it is strongly recommended to employ `android@5` to avoid versions conflict with the *Crosswalk WebView* Cordova plugin.
+- Add the Android platform to Cordova: `cordova platform add android@6`. 
+  - Notice that it is strongly recommended to employ `android@6` to avoid versions conflict with the *Crosswalk WebView* Cordova plugin.
   - To outline all pre-installed plugins in the project environment, type: `cordova platforms ls`.
 
 Thereafter the app is ready to be build. To build an Android APK, run `ionic cordova build android` for building the Android APK, or `ionic cordova run android` for building the APK and installing it on the first available Android device.
