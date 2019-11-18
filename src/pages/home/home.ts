@@ -1,4 +1,4 @@
-import { Component, NgZone, ViewChild, ElementRef } from '@angular/core';
+import { Component, NgZone, ViewChild, ElementRef, ComponentFactoryResolver } from '@angular/core';
 import { IonicPage, NavController, Platform, NavParams } from 'ionic-angular';
 import { FormControl } from '../../../node_modules/@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -6,7 +6,9 @@ import * as L from 'leaflet';
 import * as _ from 'lodash';
 import { Geolocation } from '@ionic-native/geolocation';
 import { RestApiProvider } from '../../providers/rest-api/rest-api';
-
+import { TripproposalsPage } from '../tripproposals/tripproposals';
+import * as uuid from 'uuid';
+ 
 declare var google;
 
 @IonicPage()
@@ -26,42 +28,72 @@ export class HomePage {
   GoogleAutocomplete;
   geocoder;
   autocomplete = { input: '' };
-  autocompleteLocations = [];
+  autocompleteDestination = { input: '' };
+  startAutocompleteLocations=[];
+  endAutocompleteLocations=[];
   currentLat: any;
   currentLng: any;
   addressValue: any;
   zoom: number;
   users: any;
   propertyList = [];
-
+  Locations ={
+    startpoint : { lat: null , long: null },
+     endpoint : { lat: null , long: null }
+  }
+  isEnabled = false   ; 
+  id:string= uuid() ; 
 
   // constructor 
-  constructor(public restProvider: RestApiProvider, public http: HttpClient, public geolocation: Geolocation, private ngZone: NgZone, public navCtrl: NavController, public platform: Platform, public navParams: NavParams) {
+  constructor(public restProvider: RestApiProvider, public http: HttpClient, public geolocation: Geolocation, private ngZone: NgZone, public navCtrl: NavController, 
+    public platform: Platform, public navParams: NavParams) {
     this.searchControl = new FormControl();
     this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
     this.geocoder = new google.maps.Geocoder;
-
+    console.log(this.id);
   }
-
+  
+  ionViewWillload(){
+    console.log("will  Load");
+  }
   //load all ressources 
   ionViewDidLoad() {
+    console.log("did Load");
     this.loadMap();
-    this.restProvider.getUserIdentifier("abcd1234").then(() => {
-      this.getUsersPositions();
-    }
+    this.restProvider.getUserIdentifier(this.id).then((value) => {
+      console.log("value") ;
+      console.log(value) ; 
+      // this.getUsersPositions();
+     
+     }
     );
-
+     
+  }
+  ionViewCanEnter(){
+    console.log("can enter");
+   
+  }
+  ionViewDidEnter(){
+   console.log("did enter") ; 
   }
 
+  
+   // Verify if the two textfields are not empty
+   IsEnabled(){
+   if(this.autocomplete.input!="" && this.autocompleteDestination.input!="")
+     this.isEnabled=true ; 
+   
+   }
   // prevent initialize container error  
   ionViewCanLeave() {
-    document.getElementById("map").outerHTML = "";
+     document.getElementById("map").outerHTML = "";
   }
-
+   
   // get users position from restprovider
   getUsersPositions() {
     this.restProvider.getUsersPositions()
       .then(data => {
+        
         this.users = data;
         for (const property of this.users) {
           let bikeIcon = L.icon({
@@ -81,12 +113,10 @@ export class HomePage {
 
   //load map functions 
   loadMap() {
-    this.map = L.map("map", {
-      minZoom: 4
-    }).fitWorld();
+    this.map = L.map("map");
     L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-      maxZoom: 23,
-      attribution: ''
+      
+     
     }).addTo(this.map);
 
 
@@ -98,27 +128,15 @@ export class HomePage {
           lng: resp.coords.longitude
         };
 
-        this.currentLat = resp.coords.latitude;
-        this.currentLat = resp.coords.longitude;
-        this.setAddress(pos);
+        // this.currentLat = resp.coords.latitude;
+        // this.currentLat = resp.coords.longitude;
+        // this.setAddress(pos);
         this.map.setView([resp.coords.latitude, resp.coords.longitude], 15);
+        console.log(resp.coords.latitude+"  "+resp.coords.longitude)
+        L.marker([resp.coords.latitude,resp.coords.longitude]).addTo(this.map);
         this.currentLocation = pos;
-        this.setAddress(this.currentLocation);
-        let markerGroup = L.featureGroup();
-        this.marker = L.marker([resp.coords.latitude, resp.coords.longitude], {
-          draggable: true
-        });
-        this.marker.on('dragend', (event) => {
-          var position = this.marker.getLatLng();
-          this.marker.setLatLng(position, {
-            draggable: 'true'
-          }).bindPopup(position).update();
-          this.currentLocation = position;
-          this.map.panTo(this.currentLocation, 15);
-          this.setAddress(this.currentLocation);
-        });
-        markerGroup.addLayer(this.marker);
-        this.map.addLayer(markerGroup);
+        // this.setAddress(this.currentLocation);
+       
 
       }).catch((error) => {
         console.log('Error getting location', error);
@@ -126,54 +144,129 @@ export class HomePage {
     });
   }
 
-  //retrieve google autocomplete 
-  updateLocation() {
-    if (this.autocomplete.input == '') {
-      this.autocompleteLocations = [];
+  //retrieve  autocomplete  startpoint
+  StartupdateLocation(location) {
+
+    console.log(location);
+    if (location == '') {
+      this.startAutocompleteLocations = [];
       return;
     }
-    this.GoogleAutocomplete.getPlacePredictions({ input: this.autocomplete.input },
-      (predictions, status) => {
-        this.autocompleteLocations = [];
-        this.ngZone.run(() => {
-          _.forEach(predictions, (prediction) => {
-            this.autocompleteLocations.push(prediction);
-          });
-        });
-      });
+    // this.GoogleAutocomplete.getPlacePredictions({ input: this.autocomplete.input },
+    //   (predictions, status) => {
+    //     this.autocompleteLocations = [];
+    //     this.ngZone.run(() => {
+    //       _.forEach(predictions, (prediction) => {
+    //         this.autocompleteLocations.push(prediction);
+    //       });
+    //     });
+    //   });
+    this.http.get<any[]>(`https://nominatim.openstreetmap.org/search?format=json&limit=5&q=${location}`)
+    .subscribe(result => this.startAutocompleteLocations= result);
+     this.IsEnabled();
+  }
+
+  // retrieve autocomplete endpoint
+  EndupdateLocation(location) {
+    console.log(location);
+    if (location == '') {
+      this.endAutocompleteLocations = [];
+      return;
+    }
+    // this.GoogleAutocomplete.getPlacePredictions({ input: this.autocomplete.input },
+    //   (predictions, status) => {
+    //     this.autocompleteLocations = [];
+    //     this.ngZone.run(() => {
+    //       _.forEach(predictions, (prediction) => {
+    //         this.autocompleteLocations.push(prediction);
+    //       });
+    //     });
+    //   });
+    this.http.get<any[]>(`https://nominatim.openstreetmap.org/search?format=json&limit=5&q=${location}`)
+    .subscribe(result => this.endAutocompleteLocations= result);
+
+    this.IsEnabled();
+   
   }
   // choose location after selection
   selectLocation(location) {
-    this.autocompleteLocations = [];
-    this.searchControl.setValue(location.description);
+    console.log(" first one is running ");
+    // this.autocompleteLocations = [];
+    // this.searchControl.setValue(location.description);
 
-    this.geocoder.geocode({ 'address': location.description }, (results, status) => {
-      if (status === 'OK' && results[0]) {
-        let position = {
-          lat: results[0].geometry.location.lat(),
-          lng: results[0].geometry.location.lng()
-        };
-        this.currentLat = results[0].geometry.location.lat();
-        this.currentLng = results[0].geometry.location.lng();
-        this.map.panTo(position, 15);
-        this.marker.setLatLng(position);
-      }
+    // this.geocoder.geocode({ 'address': location.description }, (results, status) => {
+    //   if (status === 'OK' && results[0]) {
+    //     let position = {
+    //       lat: results[0].geometry.location.lat(),
+    //       lng: results[0].geometry.location.lng()
+    //     };
+    //     this.currentLat = results[0].geometry.location.lat();
+    //     this.currentLng = results[0].geometry.location.lng();
+    //     this.map.panTo(position, 15);
+    //     this.marker.setLatLng(position);
+    //   }
+    // })
+        this.Locations.startpoint.lat=location.lat ; 
+        this.Locations.startpoint.long= location.lon ; 
+        this.autocomplete.input=location.display_name;
+        this.startAutocompleteLocations=[];
+        this.IsEnabled();
+        
+        
+       
+        
+
+
+  }
+  //select location for the destination field 
+  selectLocationDestination(location) {
+        
+        this.Locations.endpoint.lat=location.lat ; 
+        this.Locations.endpoint.long= location.lon ; 
+        this.autocompleteDestination.input=location.display_name;
+        this.endAutocompleteLocations=[];
+        this.IsEnabled();
+      
+
+  }
+
+  // // change Adress 
+  // setAddress(location) {
+  //   this.geocoder.geocode({ 'location': location }, (results, status) => {
+  //     if (status == 'OK' && results[0]) {
+  //       this.address = results[0].formatted_address;
+  //       this.searchControl.setValue(this.address);
+  //     } else {
+  //       console.log('No results found');
+  //     }
+  //   });
+  // }
+
+  // go to the trip proposals page 
+  goToProposals(){
+     
+     
+    this.navCtrl.push(TripproposalsPage,{
+       startpoint: this.Locations.startpoint ,
+        endpoint: this.Locations.endpoint  
+      // startpoint : { lat: 52.524287, long:13.346346 }, 
+      // endpoint : { lat: 52.521918, long: 13.413215 },
     })
+
   }
 
-  // change Adress 
-  setAddress(location) {
-    this.geocoder.geocode({ 'location': location }, (results, status) => {
-      if (status == 'OK' && results[0]) {
-        this.address = results[0].formatted_address;
-        this.searchControl.setValue(this.address);
-      } else {
-        console.log('No results found');
-      }
-    });
+ 
+  setcurrentlocation(){
+    this.geolocation.getCurrentPosition().then((resp) => {
+      console.log(resp.coords.latitude)
+      console.log(resp.coords.longitude
+        )      }).catch((error) => {
+       console.log('Error getting location', error);
+     });
+
+     this.autocomplete.input="Current position";
+
   }
-
-
 
 
 }

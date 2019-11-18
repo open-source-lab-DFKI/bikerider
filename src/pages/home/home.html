@@ -17,23 +17,37 @@
 <!-- Map -->
 <ion-content>
 		<!-- Searchbar -->
-		<ion-searchbar [(ngModel)]="autocomplete.input" (ionInput)="updateLocation()" [formControl]="searchControl" placeholder="search for start"></ion-searchbar>
-		<ion-list [hidden]="autocompleteLocations.length == 0">
-			<ion-item *ngFor="let location of autocompleteLocations" tappable (click)="selectLocation(location)">
-				{{ location.description }}
-			</ion-item>
-		</ion-list>
-		<ion-searchbar  placeholder="search for destination"></ion-searchbar>
-		<ion-list [hidden]="autocompleteLocations.length == 0">
-			<ion-item >
-				
-			</ion-item>
-		</ion-list>
 		
-<div id="map">
-	<div class="actionbutton actionImg">
-	</div>	
+		<div class="top">
 
-</div>	
+				<ion-searchbar [(ngModel)]="autocomplete.input" (ionInput)="StartupdateLocation(autocomplete.input)" [formControl]="searchControl" placeholder="search for startt" >
+		 
+					</ion-searchbar>
+					
+					<ion-list [hidden]="startAutocompleteLocations.length == 0">
+						<ion-item *ngFor="let location of startAutocompleteLocations" tappable (click)="selectLocation(location)">
+							{{location.display_name}}
+						</ion-item>
+					</ion-list>
+					<ion-searchbar  [(ngModel)]="autocompleteDestination.input"   (ionInput)="EndupdateLocation(autocompleteDestination.input)"  placeholder="search for destination"></ion-searchbar>
+					<ion-list [hidden]="  endAutocompleteLocations.length == 0">
+						<ion-item *ngFor="let location of   endAutocompleteLocations" tappable (click)="  selectLocationDestination(location)">
+							{{location.display_name}}
+						</ion-item>
+					</ion-list>
+					<button ion-button  full  [disabled]= !isEnabled  (click)="goToProposals()" >
+						Search 
+						<ion-icon name="custom-gobutton" style="margin-left:5rem;"></ion-icon>
+					</button>
 
+		</div>
+		
+		<ion-content  >
+				<div id="map">
+						<div class="actionbutton actionImg">
+						</div>
+						<ion-icon  (click)="this.setcurrentlocation()" class="localisationButton" name="ios-locate-outline" large ></ion-icon>	
+				</div>	
+		</ion-content>
+ 
 </ion-content>

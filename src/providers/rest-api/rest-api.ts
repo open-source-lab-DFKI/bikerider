@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { LatLng } from 'leaflet';
+import { resolveDefinition } from '@angular/core/src/view/util';
 
 /*
   Generated class for the RestApiProvider provider.
@@ -13,12 +14,13 @@ export class RestApiProvider {
    */
 
   // the backend API base address
-  apiUrl: string = 'http://lnv-3246.sb.dfki.de:3001/bikerider/v1';
+   apiUrl: string = 'http://lnv-3246.sb.dfki.de:3001/bikerider/v1';
 
+    // apiUrl: string ='https://virtserver.swaggerhub.com/patrick.jattke/Open_Source_Mobility_Backend/1.0.0' ; 
   /*******************************
    * Attributes
    */
-
+   
   // the temporary identifier generated in the backend
   userId: string;
 
@@ -27,7 +29,7 @@ export class RestApiProvider {
 
   // the ID of the user's active trip
   activeTripId: string;
-
+  test:any[]=[];
   /*******************************
    * CLASS CONSTRUCTOR
    */
@@ -44,6 +46,8 @@ export class RestApiProvider {
    * 
    * Returns the position of one or multiple users.
    */
+ 
+   
   getUsersPositions() {
     return new Promise(resolve => {
       const options = {
@@ -52,10 +56,15 @@ export class RestApiProvider {
       }
       this.http.get(this.apiUrl + '/users', options).subscribe(data => {
         resolve(data);
+        console.log("OK")
       }, err => this.handleError(err));
     });
   }
+   
 
+
+
+  
   /**
    * `POST /users`
    * 
@@ -64,7 +73,9 @@ export class RestApiProvider {
    * @param deviceId the (secret) device ID of the user's device, used as a kind of identifier in the app
    */
   getUserIdentifier(deviceId: string) {
+    
     this.deviceId = deviceId;
+
     return new Promise(resolve => {
       const options = {
         headers: new HttpHeaders(),
@@ -72,7 +83,9 @@ export class RestApiProvider {
       }
       this.http.post(this.apiUrl + '/users', "", options).subscribe(data => {
         this.userId = data['user_id'];
-        resolve(data);
+        console.log(data['user_id'])
+         resolve(data);
+         console.log("jawou mriguel") ;
       }, err => this.handleError(err));
     });
   }
@@ -90,7 +103,7 @@ export class RestApiProvider {
    * @param destinationReachedFlag indicates whether the user reached the destination
    * @param abortedFlag indicates whether the user actively cancelled the trip
    */
-  updateUser(currentPosition: LatLng, destinationReachedFlag: boolean = false, abortedFlag: boolean = false) {
+  updateUser(currentPosition:any, destinationReachedFlag: boolean = false, abortedFlag: boolean = false) {
     // TODO: test this method as it has not been tested yet!
     return new Promise(resolve => {
       const options = {
@@ -119,7 +132,8 @@ export class RestApiProvider {
    * @param toPosition the end position of the user's trip
    * @param intersections a flag describing whether the API should return route intersections with other users
    */
-  getTripProposal(fromPosition: LatLng, toPosition: LatLng, intersections: boolean = true) {
+ 
+  getTripProposal(fromPosition:any, toPosition:any, intersections: boolean = true) {
     // TODO: test this method as it has not been tested yet!
     return new Promise(resolve => {
       const options = {
@@ -127,13 +141,33 @@ export class RestApiProvider {
         params: new HttpParams().set("intersections", intersections.toString())
       }
       var requestBody = {
-        "start_point": fromPosition,
-        "end_point": toPosition
+        "start_point": {lng: fromPosition.lng ,lat: fromPosition.lat },
+        "end_point":   {lng: toPosition.lng ,lat: toPosition.lat }
       }
       this.http.post(`${this.apiUrl}/trip_proposals`, requestBody, options).subscribe(data => {
+         
+          
         resolve(data);
       }, err => this.handleError(err));
     });
+  }
+ getTripProposal_v2(fromPosition:any, toPosition:any, intersections: boolean = true){
+    // TODO: test this method as it has not been tested yet!
+   
+ 
+    const options = {
+      headers: new HttpHeaders().set('APP-USER-ID', this.userId),
+      params: new HttpParams().set("intersections", intersections.toString())
+    }
+    var requestBody = {
+      "start_point": {lng: fromPosition.lng ,lat: fromPosition.lat },
+      "end_point":   {lng: toPosition.lng ,lat: toPosition.lat }
+    }
+    console.log(requestBody);
+    console.log(options) ;
+    return  this.http.post(`${this.apiUrl}/trip_proposals`, requestBody, options).subscribe(data=>{
+      console.log(data) ;
+    })
   }
 
   /**
@@ -169,5 +203,30 @@ export class RestApiProvider {
     console.error(`[REST-API] ${err.message}`);
     console.error(err);
   }
+
+  // Put Request to update a trip 
+    update_trip(current_position:any,trip_id:string,destination_reached:boolean,aborted:boolean){
+       return new Promise(resolve=>{
+        const options={
+          headers: new HttpHeaders().set('APP-USER-ID',this.userId) 
+        }
+        
+        const requestBody={
+            "position": {
+              "lng": current_position.lng,
+              "lat": current_position.lat
+            },
+            "position_timestamp":new Date().toISOString(),
+            "active_trip_id": trip_id,
+            "destination_reached": destination_reached,
+            "aborted": aborted 
+          }
+        
+       this.http.put(`${this.apiUrl}/users/${this.deviceId}`,requestBody,options).subscribe(data=>resolve(data)) ; 
+
+
+       })
+
+    }
 
 }

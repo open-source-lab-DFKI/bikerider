@@ -1,14 +1,32 @@
 .ios, .md {
     page-home {
-      .scroll {
-        height: 100%;
+      
+      .top{
+        
+        position:relative ;
       }
+      .bar-button{
+        color: red !important;
+      }
+      .button-inner{
+        color : white  ; 
+      }
+      
       #map {
+        pointer-events: none;
         height: 100%;
         width: 100%;
         padding: 0;
-
+        position:relative ; 
+        .localisationButton{
+          position:absolute ; 
+          z-index:99999999999; 
+          right:20px ;
+          top:30px ; 
+          font-size: 40px;
+        }
       }
+      
       .searchbar-md {
         padding: 8px 0px;
         width: 100%;
@@ -41,11 +59,7 @@
       padding: 8px;
     }
     
-    .actionImg {
-      background: url("../assets/content/images/ic_arrow_forward_48px.png") no-repeat #ffeb3b;
-      background-position: 14px;
-      background-size: 36px 36px;
-    }
+    
     
     
     }

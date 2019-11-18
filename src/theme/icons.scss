@@ -1,0 +1,14 @@
+ion-icon {
+    &[class*='custom-'] {
+       mask-size: contain;
+       mask-position: 50% 50%;
+       mask-repeat: no-repeat;
+       background: currentColor;
+       width: 3rem;
+       height: 3rem;
+    }
+    &[class*='gobutton'] {
+       mask-image: url('../assets/images/gobutton.png');
+    }
+     
+ }

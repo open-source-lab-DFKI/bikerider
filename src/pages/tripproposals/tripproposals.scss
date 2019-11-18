@@ -1,0 +1,100 @@
+page-tripproposals {
+ 
+
+
+ion-header{
+     background:#494F54;
+    padding: 0 12px;
+    font-size: 2rem;
+    font-weight: 500;
+    
+    display: flex;
+   
+    
+    
+    align-items:center ; 
+    .backbutton{
+      padding:0;
+      margin-top:0.7rem ; 
+      font-size: 2rem;
+        background:#494F54 !important ;  
+        border-style:none !important ;
+        box-shadow: none;
+        color:white;
+    }
+}  
+ .title{
+    margin-top: 1rem;
+    margin-left:60px;
+    color:white ; 
+    
+}
+   
+   
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    .toolbar-title{
+        color:#FFFFFF;
+  
+       }
+    .back-button{
+        color:white ; 
+    }
+    #map {
+        height: 100%;
+        width: 100%;
+        padding: 0;
+        position: relative;
+        
+      }
+      .modal{
+          box-sizing: border-box;
+        position: absolute;
+        height:50%;
+        width : 70%;
+        background:#ecf0f1; 
+        top:150px ;
+        left:60px; 
+        z-index: 999999999999;
+        ion-card-header{
+         padding:0;
+         display: flex;
+         flex-direction: row-reverse;
+         margin-bottom: 10px;
+         .goButton{margin-top:30px;} 
+        
+        }
+        
+        }
+      .display{
+          visibility: hidden;
+      }
+      .exit-button{
+         width: 40px;
+         height:40px; 
+        
+         background: #b2bec3;
+         margin-top:10px ; 
+         margin-left: auto ;
+         margin-right:20px; 
+       
+         border-radius: 50%;
+      }
+      .exit-button:hover{
+          
+          background:#636e72;
+      }
+   
+}
+ 

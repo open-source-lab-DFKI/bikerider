@@ -13,10 +13,12 @@ import { MmirProvider } from '../providers/mmir';
 import { VoiceUIProvider } from '../providers/mmir';
 import { AppConfig } from '../providers/app-config';
 import { RestApiProvider } from '../providers/rest-api/rest-api';
+import { TripproposalsPage } from '../pages/tripproposals/tripproposals';
+import {TripPage} from '../pages/trip/trip';
 
 @NgModule({
   declarations: [
-    MyApp,
+    MyApp,TripproposalsPage,TripPage
   ],
   imports: [
     BrowserModule,
@@ -28,7 +30,7 @@ import { RestApiProvider } from '../providers/rest-api/rest-api';
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    MyApp,
+    MyApp, TripproposalsPage,TripPage
   ],
   providers: [
     Storage, MmirProvider, VoiceUIProvider, AppConfig,

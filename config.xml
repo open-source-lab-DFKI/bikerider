@@ -47,8 +47,13 @@
     <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
     <plugin name="cordova-plugin-vibration" spec="^3.1.0" />
     <plugin name="cordova-plugin-network-information" spec="^2.0.1" />
-    <plugin name="cordova-plugin-geolocation" spec="^4.0.1" />
     <plugin name="cordova-plugin-advanced-geolocation" spec="^1.6.2" />
     <plugin name="dfki-mmir-plugin-queue" spec="~0.1.1" />
     <plugin name="dfki-mmir-plugin-speech-android" spec="~0.9.6" />
+    <plugin name="cordova-plugin-advanced-http" spec="^2.1.1" />
+    <plugin name="cordova-plugin-geolocation" spec="^4.0.2">
+        <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="To locate you" />
+    </plugin>
+    <engine name="android" spec="6.4.0" />
+    <plugin name="cordova-plugin-device-orientation" spec="^2.0.1" />
 </widget>
