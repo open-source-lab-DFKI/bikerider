@@ -1,5 +1,6 @@
 import { Component, NgZone, ViewChild, ElementRef, ComponentFactoryResolver } from '@angular/core';
 import { IonicPage, NavController, Platform, NavParams } from 'ionic-angular';
+import { DeviceOrientation, DeviceOrientationCompassHeading } from '@ionic-native/device-orientation/ngx';
 import { FormControl } from '../../../node_modules/@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import * as L from 'leaflet';
@@ -36,47 +37,52 @@ export class HomePage {
   addressValue: any;
   zoom: number;
   users: any;
+ 
   propertyList = [];
   Locations ={
     startpoint : { lat: null , long: null },
      endpoint : { lat: null , long: null }
   }
+  currentposition={lat:null,long:null}
   isEnabled = false   ; 
   id:string= uuid() ; 
 
   // constructor 
   constructor(public restProvider: RestApiProvider, public http: HttpClient, public geolocation: Geolocation, private ngZone: NgZone, public navCtrl: NavController, 
-    public platform: Platform, public navParams: NavParams) {
+    public platform: Platform, public navParams: NavParams,public device: DeviceOrientation) {
     this.searchControl = new FormControl();
     this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
     this.geocoder = new google.maps.Geocoder;
-    console.log(this.id);
+    
+    
+ 
+    
   }
   
   ionViewWillload(){
-    console.log("will  Load");
+   
+ 
   }
   //load all ressources 
   ionViewDidLoad() {
-    console.log("did Load");
+    this.setcurrentlocation();
     this.loadMap();
     this.restProvider.getUserIdentifier(this.id).then((value) => {
-      console.log("value") ;
-      console.log(value) ; 
+       
       // this.getUsersPositions();
      
      }
+   
     );
-     
+
   }
-  ionViewCanEnter(){
-    console.log("can enter");
+  ionViewCanEnter(){ 
    
   }
   ionViewDidEnter(){
-   console.log("did enter") ; 
+   
   }
-
+ 
   
    // Verify if the two textfields are not empty
    IsEnabled(){
@@ -87,7 +93,10 @@ export class HomePage {
   // prevent initialize container error  
   ionViewCanLeave() {
      document.getElementById("map").outerHTML = "";
+     console.log("can leave")  ;
   }
+
+
    
   // get users position from restprovider
   getUsersPositions() {
@@ -132,7 +141,7 @@ export class HomePage {
         // this.currentLat = resp.coords.longitude;
         // this.setAddress(pos);
         this.map.setView([resp.coords.latitude, resp.coords.longitude], 15);
-        console.log(resp.coords.latitude+"  "+resp.coords.longitude)
+        
         L.marker([resp.coords.latitude,resp.coords.longitude]).addTo(this.map);
         this.currentLocation = pos;
         // this.setAddress(this.currentLocation);
@@ -146,8 +155,7 @@ export class HomePage {
 
   //retrieve  autocomplete  startpoint
   StartupdateLocation(location) {
-
-    console.log(location);
+ 
     if (location == '') {
       this.startAutocompleteLocations = [];
       return;
@@ -168,7 +176,7 @@ export class HomePage {
 
   // retrieve autocomplete endpoint
   EndupdateLocation(location) {
-    console.log(location);
+    
     if (location == '') {
       this.endAutocompleteLocations = [];
       return;
@@ -183,14 +191,24 @@ export class HomePage {
     //     });
     //   });
     this.http.get<any[]>(`https://nominatim.openstreetmap.org/search?format=json&limit=5&q=${location}`)
-    .subscribe(result => this.endAutocompleteLocations= result);
+    .subscribe(result =>{
+
+       // function that filters the Suggestions in order to get rid of the places not in Berlin 
+
+      // var newResult=result.filter(element=>element.display_name.indexOf('Berlin')>-1) ;
+    
+       
+      this.endAutocompleteLocations= result;
+
+    });
+    
 
     this.IsEnabled();
    
   }
   // choose location after selection
   selectLocation(location) {
-    console.log(" first one is running ");
+    
     // this.autocompleteLocations = [];
     // this.searchControl.setValue(location.description);
 
@@ -247,7 +265,7 @@ export class HomePage {
      
      
     this.navCtrl.push(TripproposalsPage,{
-       startpoint: this.Locations.startpoint ,
+       startpoint: this.currentposition ,
         endpoint: this.Locations.endpoint  
       // startpoint : { lat: 52.524287, long:13.346346 }, 
       // endpoint : { lat: 52.521918, long: 13.413215 },
@@ -257,10 +275,13 @@ export class HomePage {
 
  
   setcurrentlocation(){
+    console.log("hi");
     this.geolocation.getCurrentPosition().then((resp) => {
-      console.log(resp.coords.latitude)
-      console.log(resp.coords.longitude
-        )      }).catch((error) => {
+      
+       console.log(resp);
+      this.currentposition.lat=resp.coords.latitude;
+      this.currentposition.long= resp.coords.longitude ; 
+          }).catch((error) => {
        console.log('Error getting location', error);
      });
 

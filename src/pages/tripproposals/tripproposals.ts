@@ -1,6 +1,7 @@
 import { Component, NgZone, ViewChild, ElementRef, ComponentFactoryResolver, OnInit } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams,Platform} from 'ionic-angular';
 import {RestApiProvider} from '../../providers/rest-api/rest-api' ;
+import { DeviceOrientation, DeviceOrientationCompassHeading } from '@ionic-native/device-orientation/ngx';
 import { AlertController } from 'ionic-angular';
 import { ModalController, ViewController } from 'ionic-angular';
 import {TripPage} from '../trip/trip';
@@ -55,7 +56,8 @@ export class TripproposalsPage implements OnInit {
   distance=[0,0];
   choosen_route_geometry  ; 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    public restprovider:RestApiProvider,private alertCtrl: AlertController,public modalCtrl: ModalController) {
+    public restprovider:RestApiProvider,private alertCtrl: AlertController,
+    public modalCtrl: ModalController,public device :DeviceOrientation,public plateform: Platform) {
   }
   ngOnInit(){
     
@@ -91,11 +93,20 @@ export class TripproposalsPage implements OnInit {
    
   
    
-   
+  
     
  console.log('ionViewDidLoad TripproposalsPage');
     
                   };
+
+  test(){
+    
+    this.plateform.ready().then(()=>{
+     
+    })
+  
+          
+                  }
 
  
   ionViewCanLeave() {
@@ -145,7 +156,7 @@ console.log(fake_trips);
     
 //   }) 
  
-var group = new L.FeatureGroup() ; 
+ 
  
 fake_trips.forEach(function(route,index){
   console.log('thhh');
@@ -203,7 +214,7 @@ fake_trips.forEach(function(route,index){
     }).addTo(this.map);
      
 
-  this.draw(route);
+  this.draw(route,index);
 
 },this);
 /// draw the overlaps 
@@ -268,7 +279,7 @@ fake_trips.forEach(function(route,index){
 
 
  }
- draw(route){
+ draw(route,index){
   if(route['trip_intersections'].length!=0){
     
     var a = route['trip_intersections'][0]['intersections'];
@@ -290,6 +301,31 @@ fake_trips.forEach(function(route,index){
           
         }
      );
+
+     polyline.on('click',(e)=>{
+      this.popup=true ; 
+      this.choosen_route_id=this.routes[index]['trip_id'];
+      this.choosen_route_geometry=this.routes[index].geometry;
+  
+      var overall = this.routes[index]['distance'] ; 
+      this.distance[0]=this.routes[index]['distance'];
+      var intersections_array = this.routes[index]['trip_intersections']; 
+       var sum=0 ;
+       intersections_array.forEach(element =>
+        sum+=element.distance
+        ) ; 
+       this.intersection_distance=sum.toString().trim().split('.')[0];
+        
+      
+      // if(intersections_array.length!=0){
+      //   var sum =0 ;
+        
+      // }
+      
+    })
+
+
+
    
      polyline.addTo(this.map);
    
@@ -317,18 +353,18 @@ update_user(){
 delete(){
 //   console.log('delete') ; 
  
-  this.restprovider.update_trip(this.startpoint,'3848b787-e298-4f41-9ee9-048c2e64d59f',true,true)
-   .then(data=>console.log(data)) ;
+  this.restprovider.update_trip(this.startpoint,'85f0590b-63b2-4aaa-9b48-bbab584123ea',true,true)
+   .then(()=>console.log("ahayyyy")) ;
 
     
-  this.restprovider.update_trip(this.startpoint,'5fc654c9-9087-468d-af10-e1e81859b802',true,true)
+  this.restprovider.update_trip(this.startpoint,'1847db67-6245-4073-b703-c1dbca6e1ffe',true,true)
   .then(data=>console.log(data)) ;
    
-  this.restprovider.update_trip(this.startpoint,'fd8c7a73-634d-4408-a211-a0935a80b310',true,true)
+  this.restprovider.update_trip(this.startpoint,'346f15bc-cc01-4f36-81ae-1cc90ec207f1',true,true)
    .then(data=>console.log(data)) ;
     
-  this.restprovider.update_trip(this.startpoint,'d0379c21-46cb-4bae-af26-a3fff0ecb146',true,true)
-  .then(data=>console.log(data)) ;
+  this.restprovider.update_trip(this.startpoint,'dad10569-7eb7-4ddb-8314-58c2ce6368cc',true,true)
+  .then(data=>console.log("hi")) ;
    
 }
 

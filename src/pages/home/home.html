@@ -20,7 +20,7 @@
 		
 		<div class="top">
 
-				<ion-searchbar [(ngModel)]="autocomplete.input" (ionInput)="StartupdateLocation(autocomplete.input)" [formControl]="searchControl" placeholder="search for startt" >
+				<!-- <ion-searchbar [(ngModel)]="autocomplete.input" (ionInput)="StartupdateLocation(autocomplete.input)" [formControl]="searchControl" placeholder="search for startt" >
 		 
 					</ion-searchbar>
 					
@@ -28,7 +28,7 @@
 						<ion-item *ngFor="let location of startAutocompleteLocations" tappable (click)="selectLocation(location)">
 							{{location.display_name}}
 						</ion-item>
-					</ion-list>
+					</ion-list> -->
 					<ion-searchbar  [(ngModel)]="autocompleteDestination.input"   (ionInput)="EndupdateLocation(autocompleteDestination.input)"  placeholder="search for destination"></ion-searchbar>
 					<ion-list [hidden]="  endAutocompleteLocations.length == 0">
 						<ion-item *ngFor="let location of   endAutocompleteLocations" tappable (click)="  selectLocationDestination(location)">

@@ -222,7 +222,7 @@ export class RestApiProvider {
             "aborted": aborted 
           }
         
-       this.http.put(`${this.apiUrl}/users/${this.deviceId}`,requestBody,options).subscribe(data=>resolve(data)) ; 
+       this.http.put(`${this.apiUrl}/users/${this.deviceId}`,requestBody,options).subscribe(data=>resolve("deleteXX")) ; 
 
 
        })

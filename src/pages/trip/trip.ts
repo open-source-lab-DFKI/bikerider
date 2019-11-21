@@ -1,7 +1,8 @@
  
 import { Component, NgZone, ViewChild, ElementRef, ComponentFactoryResolver, OnInit } from '@angular/core';
-import { DeviceOrientationCompassHeading } from '@ionic-native/device-orientation';
-import  DeviceOrientation from '@ionic-native/device-orientation';
+ 
+ 
+import { DeviceOrientation, DeviceOrientationCompassHeading } from '@ionic-native/device-orientation/ngx';
 import { IonicPage, NavController, NavParams,Platform} from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
 import'leaflet';
@@ -40,23 +41,23 @@ export class TripPage {
   users_positions:any ; 
   trip_polyline ; 
   decodedPolyline  ; 
+  deviceorientation:any ; 
   bikeIcon = L.icon({
     iconUrl: ('../../assets/images/gobutton.png'),
     iconSize:     [32, 32], // size of the icon   
-});
+    });
+  distance:any=null;
   
  
   constructor(public navCtrl: NavController, public navParams: NavParams,public rest:RestApiProvider,
-    public geolocation: Geolocation,public platform: Platform,
-    public deviceOrientation: DeviceOrientation
-    
-    ) {
+    public geolocation: Geolocation,public platform: Platform) {
+      this.deviceorientation= new DeviceOrientation ; 
   }
 
   ngOnInit(){
     this.startpoint= this.navParams.get('startpoint') ; 
     this.endpoint = this.navParams.get('endpoint') ; 
-    this.trip_id = this.navParams.get('route')
+    this.trip_id = this.navParams.get('route_id') ;
     this.trip_polyline = this.navParams.get('route') ; 
 
     console.log(this.startpoint)
@@ -75,17 +76,19 @@ export class TripPage {
 
   }
     ionViewCanLeave() {
+      console.log("can leave")  ;
    document.getElementById("map").outerHTML = "";
+   this.delete() ; 
   };
   ionViewWillLeave(){
-  this.delete(this.trip_id) ; 
-  }
-  ngOnDestroy(){
-    this.delete(this.trip_id) ; 
    
   }
-
-
+  ngOnDestroy(){
+   
+   
+  };
+ 
+  test(){}
   //Function to load the map
   loadmap(){
      
@@ -106,7 +109,7 @@ export class TripPage {
         lat: resp.coords.latitude,
         lng: resp.coords.longitude
       }
-      this.startpoint=pos ; 
+      this.current_position=pos ; 
      
     })
 
@@ -166,14 +169,14 @@ goHome(){
 }
 
 // function to delete a trip when the user quit the page
-delete(trip_id){
-  console.log('delete') ; 
+delete(){
+console.log(this.trip_id) ;
  
- this.rest.update_trip(this.startpoint,`${trip_id}`,true,true)
-  .then(data=>console.log(data)) ;
+ this.rest.update_trip(this.startpoint,`${this.trip_id}`,true,true)
+  .then(()=> console.log("XXXXXXXXXXXXX")) ;
 }
 
-// function to decode trip geometry into waypoints
+// function to decode trip geometr into waypoints
 decode(encoded){
 
   // array that holds the points
@@ -211,7 +214,7 @@ return points
 
 
 // this function calculate the distance between the current position of the user and his arrival point
-distance(){
+distanceCalculator(){
   if ((this.current_position.lat == this.endpoint.lat) && (this.current_position.lng == this.endpoint.lng)) {
     return 0;
   }
@@ -232,6 +235,8 @@ distance(){
     return dist * 1.609344;
 }
 }
-
+calc(){
+  console.log(this.distanceCalculator()) ; 
+}
 
 }

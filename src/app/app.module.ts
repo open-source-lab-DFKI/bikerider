@@ -15,6 +15,7 @@ import { AppConfig } from '../providers/app-config';
 import { RestApiProvider } from '../providers/rest-api/rest-api';
 import { TripproposalsPage } from '../pages/tripproposals/tripproposals';
 import {TripPage} from '../pages/trip/trip';
+import { DeviceOrientation, DeviceOrientationCompassHeading } from '@ionic-native/device-orientation/ngx';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import {TripPage} from '../pages/trip/trip';
     HttpModule,
     HttpClientModule,
     ReactiveFormsModule,
+     
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -34,9 +36,9 @@ import {TripPage} from '../pages/trip/trip';
   ],
   providers: [
     Storage, MmirProvider, VoiceUIProvider, AppConfig,
-    StatusBar, SplashScreen, Geolocation,
+    StatusBar, SplashScreen, Geolocation,DeviceOrientation,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    RestApiProvider
+    RestApiProvider,
   ]
 })
 export class AppModule {}
