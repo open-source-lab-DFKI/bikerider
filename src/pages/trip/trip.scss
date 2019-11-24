@@ -5,8 +5,37 @@ page-trip {
     width: 100%;
     padding: 0;
     position: relative;
+    z-index: -2;
+    display: flex;
+    flex-direction: row-reverse;
+    padding: 2rem;
+    .infoButton{
+      position: absolute;
+      background: green;
+      z-index: 999999;
+      font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode',
+       Geneva, Verdana, sans-serif;
+       }
+       .modal{
+        box-sizing: border-box;
+      position: absolute;
+      height:50%;
+      width : 70%;
+      background:#ecf0f1; 
+      top:150px ;
+      left:60px; 
+      z-index: 999999999999;
+      ion-card-header{
+       padding:0;
+       display: flex;
+       flex-direction: row-reverse;
+       margin-bottom: 10px;
+       .goButton{margin-top:30px;} 
+      
+      }
     
   }
+
   ion-header{
      background:#494F54;
     padding: 0 12px;
@@ -38,4 +67,4 @@ page-trip {
   
     
  
- 
+  }

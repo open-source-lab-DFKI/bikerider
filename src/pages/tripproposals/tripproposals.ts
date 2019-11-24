@@ -344,26 +344,26 @@ fake_trips.forEach(function(route,index){
 update_user(){
  
  this.restprovider.update_trip(this.startpoint,this.choosen_route_id,false,false)
-  .then(data=>console.log(data)) ; 
+  .then(data=>console.log(data)).then(()=>this.forward()) ; 
  
- this.backward();
+ 
  
 }
  
 delete(){
 //   console.log('delete') ; 
  
-  this.restprovider.update_trip(this.startpoint,'85f0590b-63b2-4aaa-9b48-bbab584123ea',true,true)
+  this.restprovider.update_trip(this.startpoint,'824659e9-4d6b-4797-b50b-b9fb22da5cca',true,true)
    .then(()=>console.log("ahayyyy")) ;
 
     
-  this.restprovider.update_trip(this.startpoint,'1847db67-6245-4073-b703-c1dbca6e1ffe',true,true)
+  this.restprovider.update_trip(this.startpoint,'7a9b4038-3b13-4e81-9db6-fbbedb4eb5b8',true,true)
   .then(data=>console.log(data)) ;
    
-  this.restprovider.update_trip(this.startpoint,'346f15bc-cc01-4f36-81ae-1cc90ec207f1',true,true)
+  this.restprovider.update_trip(this.startpoint,'2019711d-4a39-47f4-bc27-4a44917e3069',true,true)
    .then(data=>console.log(data)) ;
     
-  this.restprovider.update_trip(this.startpoint,'dad10569-7eb7-4ddb-8314-58c2ce6368cc',true,true)
+  this.restprovider.update_trip(this.startpoint,'58aa93aa-6699-4809-b5c1-89744a6050c0',true,true)
   .then(data=>console.log("hi")) ;
    
 }
@@ -405,7 +405,7 @@ return points
 
 /**** */
  
-backward(){
+forward(){
  this.navCtrl.setRoot(TripPage,{
    startpoint:this.startpoint , 
    endpoint:this.endpoint ,
@@ -413,6 +413,11 @@ backward(){
    route:this.choosen_route_geometry
  })
 }
+backward(){
+  this.navCtrl.setRoot(HomePage,{
+   
+  })
+ }
 
  
 

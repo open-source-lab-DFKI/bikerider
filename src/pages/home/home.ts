@@ -50,9 +50,6 @@ export class HomePage {
   // constructor 
   constructor(public restProvider: RestApiProvider, public http: HttpClient, public geolocation: Geolocation, private ngZone: NgZone, public navCtrl: NavController, 
     public platform: Platform, public navParams: NavParams,public device: DeviceOrientation) {
-    this.searchControl = new FormControl();
-    this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
-    this.geocoder = new google.maps.Geocoder;
     
     
  
@@ -83,7 +80,6 @@ export class HomePage {
    
   }
  
-  
    // Verify if the two textfields are not empty
    IsEnabled(){
    if(this.autocomplete.input!="" && this.autocompleteDestination.input!="")
@@ -140,7 +136,7 @@ export class HomePage {
         // this.currentLat = resp.coords.latitude;
         // this.currentLat = resp.coords.longitude;
         // this.setAddress(pos);
-        this.map.setView([resp.coords.latitude, resp.coords.longitude], 15);
+        this.map.setView([resp.coords.latitude, resp.coords.longitude],15);
         
         L.marker([resp.coords.latitude,resp.coords.longitude]).addTo(this.map);
         this.currentLocation = pos;
@@ -193,12 +189,12 @@ export class HomePage {
     this.http.get<any[]>(`https://nominatim.openstreetmap.org/search?format=json&limit=5&q=${location}`)
     .subscribe(result =>{
 
-       // function that filters the Suggestions in order to get rid of the places not in Berlin 
+      // function that filters the Suggestions in order to get rid of the places not in Berlin 
 
-      // var newResult=result.filter(element=>element.display_name.indexOf('Berlin')>-1) ;
+        var newResult=result.filter(element=>element.display_name.indexOf('Berlin')>-1) ;
     
        
-      this.endAutocompleteLocations= result;
+      this.endAutocompleteLocations= newResult;
 
     });
     

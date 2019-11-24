@@ -15,11 +15,39 @@
 
 
 <ion-content padding>
-    <button ion-button (click)="this.calc()">AAA</button>
+   <!-- <button ion-button (click)="this.calc()" *ngIf="this.distance !=null">{{this.distance+" KM"}}</button> -->
     <div id="map" class="map">
-     
+      <button class="infoButton" ion-button>i</button>
+
         <!-- <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
         <script src="leaflet-routing-machine.js"></script> -->
+        <!-- <ion-card *ngIf="popup==true" class="modal">
+          <ion-card-header>
+              <button   ion-button  class="exit-button" end>X</button>
+            </ion-card-header>
+
+            <ion-card-content>
+                <ion-item>
+              
+                        <ion-label>
+                         Remained Distance {{this.distance * 1000}} m
+                        </ion-label>
+                </ion-item>
+                      
+                         
+                     <ion-item  >
+                        <button ion-button full round >Quit The Ride</button>
+                     </ion-item>
+              </ion-card-content>
+    
+       </ion-card> -->
+
+
+
+
+
+
+
            
         </div>
 

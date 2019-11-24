@@ -13,6 +13,8 @@ import { stringify } from '@angular/compiler/src/util';
 import { a } from '@angular/core/src/render3';
 import { HomePage } from '../home/home';
 import{RestApiProvider } from '../../providers/rest-api/rest-api'
+import { setDOM } from '@angular/platform-browser/src/dom/dom_adapter';
+import { LatLng } from 'leaflet';
  
 declare var L:any;
 
@@ -37,16 +39,17 @@ export class TripPage {
   trip_id ;
   startpoint ;
   endpoint ; 
-  current_position ;  
+  current_position:any={} ;  
   users_positions:any ; 
   trip_polyline ; 
   decodedPolyline  ; 
   deviceorientation:any ; 
   bikeIcon = L.icon({
-    iconUrl: ('../../assets/images/gobutton.png'),
+    iconUrl: ('../../assets/images/position.png'),
     iconSize:     [32, 32], // size of the icon   
     });
   distance:any=null;
+  popup:boolean=true ; 
   
  
   constructor(public navCtrl: NavController, public navParams: NavParams,public rest:RestApiProvider,
@@ -60,19 +63,16 @@ export class TripPage {
     this.trip_id = this.navParams.get('route_id') ;
     this.trip_polyline = this.navParams.get('route') ; 
 
-    console.log(this.startpoint)
-    console.log( this.endpoint);
-    console.log(this.trip_id) ; 
-    console.log(this.trip_polyline)
+   
   }
 
   ionViewDidLoad() {
-   
+   this.setcurrentlocation();
    this.rest.getUsersPositions().then(data=>this.users_positions=data).then(()=>console.log(this.users_positions))
    .then(()=>this.load_positions(this.users_positions))
-   .then(()=>this.loadmap());
- 
-
+   .then(()=>this.loadmap()).then(()=>console.log(this.current_position));
+   var _thisPrincipal=this
+  setInterval(this.distanceCalculator.bind(this),4000);
 
   }
     ionViewCanLeave() {
@@ -88,7 +88,7 @@ export class TripPage {
    
   };
  
-  test(){}
+  
   //Function to load the map
   loadmap(){
      
@@ -101,7 +101,20 @@ export class TripPage {
       }).addTo(this.map);
       
   // 
-  this.platform.ready().then(() => {
+  // this.platform.ready().then(() => {
+
+
+  //   this.geolocation.getCurrentPosition({ enableHighAccuracy: true, timeout: 20000, maximumAge: 10000 }).then((resp) => {
+  //     let pos = {
+  //       lat: resp.coords.latitude,
+  //       lng: resp.coords.longitude
+  //     }
+  //     this.current_position=pos ; 
+     
+  //   })
+
+  // });
+  
 
 
     this.geolocation.getCurrentPosition({ enableHighAccuracy: true, timeout: 20000, maximumAge: 10000 }).then((resp) => {
@@ -109,14 +122,14 @@ export class TripPage {
         lat: resp.coords.latitude,
         lng: resp.coords.longitude
       }
-      this.current_position=pos ; 
+      this.current_position.lat=pos.lat ; 
+      this.current_position.lng=pos.lng ;
      
     })
 
-  });
-
+  
      
-    this.map.setView([this.startpoint.lat,this.startpoint.lng],15);
+    this.map.setView([this.startpoint.lat,this.startpoint.lng],20);
      L.marker([this.startpoint.lat,this.startpoint.lng],{icon:this.bikeIcon}).addTo(this.map);
 
      
@@ -216,6 +229,7 @@ return points
 // this function calculate the distance between the current position of the user and his arrival point
 distanceCalculator(){
   if ((this.current_position.lat == this.endpoint.lat) && (this.current_position.lng == this.endpoint.lng)) {
+   this.distance=0;
     return 0;
   }
   else {
@@ -230,13 +244,27 @@ distanceCalculator(){
     dist = Math.acos(dist);
     dist = dist * 180/Math.PI;
     dist = dist * 60 * 1.1515;
-    
-
+    this.distance=dist * 1.609344
+    console.log(dist * 1.609344);
     return dist * 1.609344;
 }
 }
 calc(){
-  console.log(this.distanceCalculator()) ; 
+    
+ 
 }
-
+setcurrentlocation(){
+  console.log("cuurent location setted");
+  this.geolocation.getCurrentPosition({ enableHighAccuracy: true, timeout: 20000, maximumAge: 10000 }).then((resp) => {
+    let pos = {
+      lat: resp.coords.latitude,
+      lng: resp.coords.longitude
+    }
+    console.log(resp.coords.latitude);
+    console.log(resp.coords.longitude);
+    this.current_position.lat=pos.lat ; 
+    this.current_position.lng=pos.lng ;
+   
+  })
+  }
 }
