@@ -9,15 +9,42 @@
 <button ion-button class="backbutton" (click)="this.goHome()">
   <ion-icon ios="ios-home" md="md-home"></ion-icon>
 </button>
-<label class="title">Trip </label>
+<ion-spinner class="spinner" *ngIf="this.distance ==null" class="title" name="dots"></ion-spinner>
+<label  *ngIf="this.distance !=null" class="title">Remaining Distance</label>
+<ion-icon *ngIf="this.distance !=null" class="custom-distance"></ion-icon>
+<label class=distance *ngIf="this.distance !=null">{{this.convert(this.distance)}}</label> 
+
+<button ion-button class="cancel-btn" (click)="this.togglePopup()">
+  <ion-icon ios="ios-close-circle head-btn" md="md-close-circle"></ion-icon>
+</button>
 
 </ion-header>
 
 
 <ion-content padding>
-   <!-- <button ion-button (click)="this.calc()" *ngIf="this.distance !=null">{{this.distance+" KM"}}</button> -->
+
     <div id="map" class="map">
-      <button class="infoButton" ion-button>i</button>
+      <ion-card  *ngIf="popup==true" class="modal">
+        <ion-card-header>
+            <button   ion-button (click)="this.togglePopup()" class="exit-button" end>X</button>
+          </ion-card-header>
+
+          <ion-card-content>
+               
+                    <ion-item>
+                      <ion-label style="margin: 40px  ">
+                     Quit The Trip ?
+                      </ion-label>
+                    </ion-item>
+                   <ion-item class="goButton" >
+                      <button ion-button full round (click)="this.goHome()" >Quit
+                       <ion-icon style="margin-left:20px"ios="ios-pause-outline" md="md-pause"></ion-icon>
+                      </button>
+                    
+                   </ion-item>
+            </ion-card-content>
+  
+     </ion-card>
 
         <!-- <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
         <script src="leaflet-routing-machine.js"></script> -->

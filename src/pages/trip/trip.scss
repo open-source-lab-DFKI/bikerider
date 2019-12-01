@@ -9,32 +9,10 @@ page-trip {
     display: flex;
     flex-direction: row-reverse;
     padding: 2rem;
-    .infoButton{
-      position: absolute;
-      background: green;
-      z-index: 999999;
-      font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode',
-       Geneva, Verdana, sans-serif;
-       }
-       .modal{
-        box-sizing: border-box;
-      position: absolute;
-      height:50%;
-      width : 70%;
-      background:#ecf0f1; 
-      top:150px ;
-      left:60px; 
-      z-index: 999999999999;
-      ion-card-header{
-       padding:0;
-       display: flex;
-       flex-direction: row-reverse;
-       margin-bottom: 10px;
-       .goButton{margin-top:30px;} 
-      
-      }
-    
+     
   }
+    
+  
 
   ion-header{
      background:#494F54;
@@ -47,24 +25,108 @@ page-trip {
     
     
     align-items:center ; 
-    .backbutton{
-      padding:0;
-      margin-top:0.7rem ; 
-      font-size: 2rem;
-        background:#494F54 !important ;  
-        border-style:none !important ;
-        box-shadow: none;
-        color:white;
-    }
+
 }
    
    }
+   .backbutton{
+    padding:0;
+    margin-top:0.7rem ; 
+    font-size: 2rem;
+      background:#494F54 !important ;  
+      border-style:none !important ;
+      box-shadow: none;
+      color:white;
+  }
+  .cancel-btn{
+     padding:0;
+     margin-top:0.7rem ; 
+     font-size: 2rem;
+      background:#494F54 !important ;  
+      border-style:none !important ;
+      box-shadow: none;
+      color:white;
+      margin-left:auto ; 
+  }
+
+
+
+
+
+
    .title{
     margin-top: 1rem;
-    margin-left:60px;
+    margin-left:40px;
     color:white ; 
+    padding:0;
+    display: block ;
    }
+   .distance{
+    margin-top: 1rem;
+    margin-left:20px;
+    margin-right:40px;
+    color:white ; 
+    padding:0;
+   }
+
+   ion-icon {
+    &[class*="custom-"] {
+      mask-size: contain;
+      mask-position: 50% 50%;
+      mask-repeat: no-repeat;
+      background: currentColor;
+      width: 2em;
+      height: 2em;
+    }
+  
+    &[class*="custom-distance"] {
+      mask-image: url('../../assets/images/distance_icon.png');
+      background:white;
+    }
   
     
+  }
+  .head-btn{
+    size:150% ;
+    font-size:20px;
+  }
+  .spinner{
+    margin-left:160px; 
  
+   
+  }
+  .spinner > * {
+    background: white;
+    
+  }
+  
+  .modal{
+   box-sizing: border-box;
+  position: absolute;
+  height:40%;
+  width : 70%;
+  background:#ecf0f1; 
+  top:100px ;
+  left:45px; 
+  z-index: 999999999999;
+  ion-card-header{
+   padding:0;
+   display: flex;
+   flex-direction: row-reverse;
+   margin-bottom: 10px;
+   .goButton{margin-top:30px;} 
+  
+  }
+  .exit-button{
+    width: 40px;
+    height:40px; 
+   
+    background: #b2bec3;
+    margin-top:10px ; 
+    margin-left: auto ;
+    margin-right:20px; 
+  
+    border-radius: 50%;
+ }
+  
   }

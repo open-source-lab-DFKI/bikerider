@@ -5,6 +5,7 @@ import { Component, NgZone, ViewChild, ElementRef, ComponentFactoryResolver, OnI
 import { DeviceOrientation, DeviceOrientationCompassHeading } from '@ionic-native/device-orientation/ngx';
 import { IonicPage, NavController, NavParams,Platform} from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
+ 
 import'leaflet';
 import 'leaflet-routing-machine';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
@@ -34,7 +35,7 @@ export class TripPage {
 
 @ViewChild('map') mapElement: ElementRef;
   
-  map: any;
+  map:any;
   marker ;
   trip_id ;
   startpoint ;
@@ -44,14 +45,18 @@ export class TripPage {
   trip_polyline ; 
   decodedPolyline  ; 
   deviceorientation:any ; 
+   
+  distance:any=null;
+  popup:boolean=false ; 
   bikeIcon = L.icon({
-    iconUrl: ('../../assets/images/position.png'),
+    iconUrl: ('../../assets/images/bike.png'),
     iconSize:     [32, 32], // size of the icon   
     });
-  distance:any=null;
-  popup:boolean=true ; 
+    positionIcon = L.icon({
+      iconUrl: ('../../assets/images/position.png'),
+      iconSize:     [32, 32], // size of the icon   
+      });
   
- 
   constructor(public navCtrl: NavController, public navParams: NavParams,public rest:RestApiProvider,
     public geolocation: Geolocation,public platform: Platform) {
       this.deviceorientation= new DeviceOrientation ; 
@@ -62,17 +67,26 @@ export class TripPage {
     this.endpoint = this.navParams.get('endpoint') ; 
     this.trip_id = this.navParams.get('route_id') ;
     this.trip_polyline = this.navParams.get('route') ; 
+    this.users_positions=this.navParams.get('users_positions')
 
    
   }
 
   ionViewDidLoad() {
-   this.setcurrentlocation();
+   
    this.rest.getUsersPositions().then(data=>this.users_positions=data).then(()=>console.log(this.users_positions))
    .then(()=>this.load_positions(this.users_positions))
-   .then(()=>this.loadmap()).then(()=>console.log(this.current_position));
-   var _thisPrincipal=this
-  setInterval(this.distanceCalculator.bind(this),4000);
+   .then(()=>this.loadmap())
+   .then(()=>this.setcurrentlocation)
+   .then(()=>console.log(this.current_position))
+   .then(()=>this.rest.getUsersPositions().then(data=>this.users_positions=data))
+   .then(()=>this.users_positions=this.users_positions
+  .filter(user=>this.date_filter(user.position_timestamp)<=30))
+   .then(()=>this.add_users_positions())  ;
+    
+  setInterval(this.distanceCalculator.bind(this),3000);
+ 
+ 
 
   }
     ionViewCanLeave() {
@@ -87,18 +101,18 @@ export class TripPage {
    
    
   };
+
+   
  
   
   //Function to load the map
   loadmap(){
-     
-      this.map = L.map("map", {
-        minZoom: 4
-      }).fitWorld();
+    
+      this.map = L.map("map").setView([this.startpoint.lat,this.startpoint.lng],20);
       L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-        maxZoom: 23,
-        attribution: ''
+      
       }).addTo(this.map);
+  
       
   // 
   // this.platform.ready().then(() => {
@@ -129,7 +143,7 @@ export class TripPage {
 
   
      
-    this.map.setView([this.startpoint.lat,this.startpoint.lng],20);
+   
      L.marker([this.startpoint.lat,this.startpoint.lng],{icon:this.bikeIcon}).addTo(this.map);
 
      
@@ -244,15 +258,57 @@ distanceCalculator(){
     dist = Math.acos(dist);
     dist = dist * 180/Math.PI;
     dist = dist * 60 * 1.1515;
-    this.distance=dist * 1.609344
+    this.distance=dist * 1.609344;
     console.log(dist * 1.609344);
     return dist * 1.609344;
 }
 }
-calc(){
-    
  
+ convert(nombre):string{
+  var result; 
+  var gauche = nombre.toString().trim().split('.')[0] ;
+  var droite = nombre.toString().trim().split('.')[1] ; 
+  if(gauche.length>=2 || gauche.length==1 && gauche[0]!="0"){
+  result=gauche+'.'+droite[0]+droite[1]+droite[2]+" Km" ; 
+  }
+  if( gauche.length==1 && gauche[0]=="0"){
+   result= (nombre*1000).toString()+" m"}
+   return result ; 
+  }
+
+  add_users_positions(){
+
+    this.users_positions.forEach(item=>
+    {
+      
+  var marker = new L.marker([item.position.lng,item.position.lat],{
+       size:'7px' ,
+       icon:this.bikeIcon
+     });
+     
+    marker.addTo(this.map);
+ 
+ 
+ 
+    }
+   
+   )
+     
+ }
+
+togglePopup(){
+  this.popup=!this.popup ; 
 }
+
+date_filter(temps){
+  var temps_date = new Date(temps).getTime() ; 
+  var difference = new Date().getTime()-temps_date; 
+  return Math.floor(difference/(60*1000)) ; 
+  
+  
+  }
+  
+
 setcurrentlocation(){
   console.log("cuurent location setted");
   this.geolocation.getCurrentPosition({ enableHighAccuracy: true, timeout: 20000, maximumAge: 10000 }).then((resp) => {
@@ -260,10 +316,16 @@ setcurrentlocation(){
       lat: resp.coords.latitude,
       lng: resp.coords.longitude
     }
-    console.log(resp.coords.latitude);
-    console.log(resp.coords.longitude);
+     
     this.current_position.lat=pos.lat ; 
     this.current_position.lng=pos.lng ;
+    var marker = new L.marker([this.current_position.lat,this.current_position.lng],{
+      size:'7px' ,
+      icon:this.positionIcon
+    });
+    
+   marker.addTo(this.map);
+ 
    
   })
   }

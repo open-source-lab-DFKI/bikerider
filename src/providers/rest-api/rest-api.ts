@@ -52,9 +52,11 @@ export class RestApiProvider {
     return new Promise(resolve => {
       const options = {
         headers: new HttpHeaders().set('APP-USER-ID', this.userId),
-        params: new HttpParams()
+         
+        
       }
-      this.http.get(this.apiUrl + '/users', options).subscribe(data => {
+     
+      this.http.get(this.apiUrl + '/users',options).subscribe(data => {
         resolve(data);
         console.log("OK")
       }, err => this.handleError(err));

@@ -14,6 +14,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { text } from '@angular/core/src/render3/instructions';
 import { stringify } from '@angular/compiler/src/util';
 import { a } from '@angular/core/src/render3';
+import { markParentViewsForCheckProjectedViews } from '@angular/core/src/view/util';
 declare var L:any;
 
 
@@ -55,9 +56,15 @@ export class TripproposalsPage implements OnInit {
   endpoint= {"lng":null,"lat":null};
   distance=[0,0];
   choosen_route_geometry  ; 
+  users_positions:any ; 
+  bikeIcon = L.icon({
+    iconUrl: ('../../assets/images/bike.png'),
+    iconSize:     [32, 32], // size of the icon   
+    });
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public restprovider:RestApiProvider,private alertCtrl: AlertController,
     public modalCtrl: ModalController,public device :DeviceOrientation,public plateform: Platform) {
+      this.add_users_positions.bind(this);
   }
   ngOnInit(){
     
@@ -73,7 +80,11 @@ export class TripproposalsPage implements OnInit {
   console.log(this.routes) ;
   }).then(()=>{
   this.loadmap(this.routes)
-  });
+  }).then(()=>this.restprovider.getUsersPositions()
+  .then(data=> this.users_positions=data))
+  .then(()=>this.users_positions=this.users_positions
+  .filter(user=>this.date_filter(user.position_timestamp)<=600))
+  .then(()=>this.add_users_positions());
  
   
   
@@ -112,6 +123,10 @@ export class TripproposalsPage implements OnInit {
   ionViewCanLeave() {
    document.getElementById("map").outerHTML = "";
   };
+
+  init(){
+    document.getElementById("map").outerHTML = "";
+  }
   exit(){
    this.popup=false ; 
    this.choosen_route_id=null  ;
@@ -141,15 +156,13 @@ export class TripproposalsPage implements OnInit {
  
 loadmap(fake_trips){
 console.log(fake_trips);
-  this.map = L.map("map", {
-    minZoom: 4
-  }).fitWorld();
+  this.map = L.map("map").setView([52.520008, 13.404954],15);
   L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-    maxZoom: 23,
-    attribution: ''
-  }).addTo(this.map);
-  this.map.setView([52.520008, 13.404954],15);
   
+  }).addTo(this.map);
+
+  
+ 
   //polyline 1
   
 //   this.decodedPolyline.forEach(element=>{
@@ -353,20 +366,56 @@ update_user(){
 delete(){
 //   console.log('delete') ; 
  
-  this.restprovider.update_trip(this.startpoint,'824659e9-4d6b-4797-b50b-b9fb22da5cca',true,true)
+  this.restprovider.update_trip(this.startpoint,'9a49a4a0-4240-4689-83af-989a8db104ca',true,true)
    .then(()=>console.log("ahayyyy")) ;
-
-    
-  this.restprovider.update_trip(this.startpoint,'7a9b4038-3b13-4e81-9db6-fbbedb4eb5b8',true,true)
+    this.restprovider.update_trip(this.startpoint,'529d3436-cea7-46b7-8741-7c7778213a28',true,true)
   .then(data=>console.log(data)) ;
    
-  this.restprovider.update_trip(this.startpoint,'2019711d-4a39-47f4-bc27-4a44917e3069',true,true)
+  this.restprovider.update_trip(this.startpoint,'f30f325c-3a81-433c-9dc2-9afee01f819b',true,true)
    .then(data=>console.log(data)) ;
-    
-  this.restprovider.update_trip(this.startpoint,'58aa93aa-6699-4809-b5c1-89744a6050c0',true,true)
-  .then(data=>console.log("hi")) ;
+     
+
+   this.restprovider.update_trip(this.startpoint,'e275bd5b-ade0-4d02-9de0-fa9325d0c553',true,true)
+   .then(data=>console.log(data)) ;
+   this.restprovider.update_trip(this.startpoint,'71bfe1b1-1e33-4315-bed1-7c7efb9e34be',true,true)
+   .then(data=>console.log(data)) ;
    
+
+
+
 }
+
+
+
+add_users_positions(){
+
+   this.users_positions.forEach(item=>
+   {
+     
+ var marker = new L.marker([item.position.lng,item.position.lat],{
+      size:'7px' ,
+      icon:this.bikeIcon
+    });
+    
+   marker.addTo(this.map);
+
+
+
+   }
+  
+  )
+    
+}
+//function to calculte the difference between two date , it gets a Timestamp as parameter
+
+date_filter(temps){
+var temps_date = new Date(temps).getTime() ; 
+var difference = new Date().getTime()-temps_date; 
+return Math.floor(difference/(60*1000)) ; 
+
+
+}
+
 
 decode(encoded){
 
@@ -410,7 +459,8 @@ forward(){
    startpoint:this.startpoint , 
    endpoint:this.endpoint ,
    route_id:this.choosen_route_id,
-   route:this.choosen_route_geometry
+   route:this.choosen_route_geometry,
+   users_positions:this.users_positions 
  })
 }
 backward(){
