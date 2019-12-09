@@ -52,7 +52,7 @@ export class HomePage {
     public platform: Platform, public navParams: NavParams,public device: DeviceOrientation) {
     
     
- 
+   console.log(this.id); 
     
   }
   

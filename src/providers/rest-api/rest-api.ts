@@ -14,7 +14,10 @@ export class RestApiProvider {
    */
 
   // the backend API base address
-   apiUrl: string = 'http://lnv-3246.sb.dfki.de:3001/bikerider/v1';
+  //  apiUrl: string = 'http://lnv-3246.sb.dfki.de:3001/bikerider/v1';
+   apiUrl: string = 'https://smartmobility.dfki.de/bikerider';
+
+
 
     // apiUrl: string ='https://virtserver.swaggerhub.com/patrick.jattke/Open_Source_Mobility_Backend/1.0.0' ; 
   /*******************************
