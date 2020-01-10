@@ -242,6 +242,7 @@ return points
 
 // this function calculate the distance between the current position of the user and his arrival point
 distanceCalculator(){
+   console.log(this.current_position.lat)
   if ((this.current_position.lat == this.endpoint.lat) && (this.current_position.lng == this.endpoint.lng)) {
    this.distance=0;
     return 0;

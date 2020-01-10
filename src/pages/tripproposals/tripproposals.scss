@@ -1,6 +1,8 @@
 page-tripproposals {
- 
 
+.scroll-content{
+   padding:0 !important;
+}
 
 ion-header{
      background:#494F54;
@@ -29,21 +31,7 @@ ion-header{
     color:white ; 
     
 }
-   
-   
-
-
-
-
-
-
-
-
-
-
-
-
-    
+  
     .toolbar-title{
         color:#FFFFFF;
   
@@ -62,11 +50,15 @@ ion-header{
           box-sizing: border-box;
         position: absolute;
         height:50%;
-        width : 70%;
+        width :80vw;
         background:#ecf0f1; 
         top:150px ;
-        left:60px; 
+        left:28px; 
         z-index: 999999999999;
+        
+
+        animation-name: example;
+        animation-duration: 1s;
         ion-card-header{
          padding:0;
          display: flex;
@@ -95,6 +87,11 @@ ion-header{
           
           background:#636e72;
       }
-   
+  
+      @keyframes example {
+       0% { top:700px ;}
+       80% {top:90px;}
+       100%{top:150px}
+      }
 }
  

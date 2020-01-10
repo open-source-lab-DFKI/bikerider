@@ -172,8 +172,11 @@ console.log(fake_trips);
  
  
 fake_trips.forEach(function(route,index){
-  console.log('thhh');
-  var  colors = ['blue','DarkSlateBlue','DodgerBlue ','darkblue ','CornflowerBlue ','yellow','green','purple'];
+   if(index==0){
+    var  colors = "blue"
+   }
+   else 
+   colors="grey"
   this.decodedPolyline=this.decode(route.geometry);
   
   
@@ -182,10 +185,11 @@ fake_trips.forEach(function(route,index){
     let polyline = L.polyline(
     coordinates,
     {  
-        color:colors[index],
-        weight:8,
+        color:colors,
+        weight:10,
         opacity:0.9,
-         lineJoin: 'round'
+         lineJoin: 'round',
+         dashArray: "0 15",
        
      }
   );
@@ -310,8 +314,8 @@ fake_trips.forEach(function(route,index){
            color:'green',
            weight:8,
            opacity:0.8,
-            lineJoin: 'round'
-          
+            lineJoin: 'round',
+             dashArray: "0 15",
         }
      );
 
