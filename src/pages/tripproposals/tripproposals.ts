@@ -49,7 +49,7 @@ export class TripproposalsPage implements OnInit {
   routes:any[]=[];
   choosen_route_id=null;
   choosen_route = this.routes[this.choosen_route_id]
-  popup:boolean=false ; 
+  popup:boolean=true ; 
   // startpoint={"lng": 13.3412,"lat": 52.5254}; 
   // endpoint= {"lng": 13.4132,"lat": 52.5219};
   startpoint={"lng":null,"lat":null}; 
@@ -76,8 +76,14 @@ export class TripproposalsPage implements OnInit {
       this.routes=data['trips'];
      console.log(this.routes);
   }).then(()=>{
-     
-  console.log(this.routes) ;
+    this.distance[0]=this.routes[0]['distance'];
+    var intersections_array = this.routes[0]['trip_intersections']; 
+     var sum=0 ;
+     intersections_array.forEach(element =>
+      sum+=element.distance
+      ) ; 
+     this.intersection_distance=sum.toString().trim().split('.')[0];
+
   }).then(()=>{
   this.loadmap(this.routes)
   }).then(()=>this.restprovider.getUsersPositions()
@@ -189,7 +195,7 @@ fake_trips.forEach(function(route,index){
         weight:10,
         opacity:0.9,
          lineJoin: 'round',
-         dashArray: "0 15",
+        //  dashArray: "0 15",
        
      }
   );
@@ -315,7 +321,7 @@ fake_trips.forEach(function(route,index){
            weight:8,
            opacity:0.8,
             lineJoin: 'round',
-             dashArray: "0 15",
+            //  dashArray: "0 15",
         }
      );
 

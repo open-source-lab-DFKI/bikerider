@@ -25,35 +25,60 @@
     <ion-row justify-content-center align-items-center style="height: 100%">
         <ion-spinner class="spinner" *ngIf="this.routes.length==0"> </ion-spinner>
         <div id="map" class="map">
-            <ion-card *ngIf="popup==true" class="modal">
-               <ion-card-header>
-                   <button   ion-button (click)="this.exit()" class="exit-button" end>X</button>
-                 </ion-card-header>
-     
-                 <ion-card-content>
-                     <ion-item>
-                   
-                             <ion-label>
-                             Overall distance  {{this.distance[0]}} m
-                             </ion-label>
-                           </ion-item>
-                           <ion-item>
-                             <ion-label>
-                             Overlap Distance {{this.intersection_distance}} m 
-                             </ion-label>
-                           </ion-item>
-                          <ion-item class="goButton" >
-                             <button ion-button full round (click)="this.update_user()" >Go On this Trip</button>
-                          </ion-item>
-                   </ion-card-content>
-         
-            </ion-card>
+            
        <!-- <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
        <script src="leaflet-routing-machine.js"></script> -->
           
        </div>
    </ion-row>
-    </ion-grid>
+   <!-- <ion-row>
+
+     <ion-card *ngIf="popup==true" class="modal">
+               
+     
+      <ion-card-content>
+          <ion-item>
+        
+                  <ion-label>
+                  Overall distance  {{this.distance[0]}} m
+                  </ion-label>
+                </ion-item>
+                <ion-item>
+                  <ion-label>
+                  Overlap Distance {{this.intersection_distance}} m 
+                  </ion-label>
+                </ion-item>
+               <ion-item class="goButton" >
+                  <button ion-button full round (click)="this.update_user()" >
+                    <ion-icon name="navigate"></ion-icon>
+                    Go On this Trip
+                  </button>
+               </ion-item>
+        </ion-card-content>
+
+ </ion-card>
+ 
+   </ion-row> -->
+   <ion-row>
+    <ion-item>
+        
+      <ion-label>
+      Overall distance  {{this.distance[0]}} m
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+      Overlap Distance {{this.intersection_distance}} m 
+      </ion-label>
+    </ion-item>
+   <ion-item class="goButton" >
+      <button ion-button full round (click)="this.update_user()" >
+        <ion-icon name="navigate"></ion-icon>
+        Go On this Trip
+      </button>
+   </ion-item>
+   </ion-row>
+  </ion-grid>
 
   
 </ion-content>

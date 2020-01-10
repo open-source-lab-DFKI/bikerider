@@ -43,18 +43,18 @@ ion-header{
         height: 100%;
         width: 100%;
         padding: 0;
-        position: relative;
+        
         
       }
       .modal{
           box-sizing: border-box;
-        position: absolute;
+       
         height:50%;
-        width :80vw;
+        width :100vw;
         background:#ecf0f1; 
-        top:150px ;
-        left:28px; 
-        z-index: 999999999999;
+        top:500px ;
+        left:-7px;
+       
         
 
         animation-name: example;
@@ -64,7 +64,10 @@ ion-header{
          display: flex;
          flex-direction: row-reverse;
          margin-bottom: 10px;
-         .goButton{margin-top:30px;} 
+         .goButton{
+             height: 40px !important;
+             width:100px !important;
+             } 
         
         }
         
@@ -88,10 +91,10 @@ ion-header{
           background:#636e72;
       }
   
-      @keyframes example {
-       0% { top:700px ;}
-       80% {top:90px;}
-       100%{top:150px}
-      }
+    //   @keyframes example {
+    //    0% { top:700px ;}
+    //    80% {top:90px;}
+    //    100%{top:150px}
+    //   }
 }
  
