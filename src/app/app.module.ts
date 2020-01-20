@@ -15,11 +15,13 @@ import { AppConfig } from '../providers/app-config';
 import { RestApiProvider } from '../providers/rest-api/rest-api';
 import { TripproposalsPage } from '../pages/tripproposals/tripproposals';
 import {TripPage} from '../pages/trip/trip';
+import {Trippropals1Page } from '../pages/trippropals1/trippropals1';
+
 import { DeviceOrientation, DeviceOrientationCompassHeading } from '@ionic-native/device-orientation/ngx';
 
 @NgModule({
   declarations: [
-    MyApp,TripproposalsPage,TripPage
+    MyApp,TripproposalsPage,TripPage,Trippropals1Page
   ],
   imports: [
     BrowserModule,
@@ -32,7 +34,7 @@ import { DeviceOrientation, DeviceOrientationCompassHeading } from '@ionic-nativ
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    MyApp, TripproposalsPage,TripPage
+    MyApp, TripproposalsPage,TripPage,Trippropals1Page
   ],
   providers: [
     Storage, MmirProvider, VoiceUIProvider, AppConfig,

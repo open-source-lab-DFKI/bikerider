@@ -1,18 +1,19 @@
 .ios, .md {
     page-home {
+     
       
       .top{
         
         position:relative ;
       }
       .bar-button{
-        color: red !important;
+        color:yellow !important;
+        display: none ;
       }
-      .button-inner{
-        color : white  ; 
-      }
+  
       
       #map {
+      
         pointer-events: none;
         height: 100%;
         width: 100%;
@@ -41,8 +42,11 @@
   
       .toolbar-title{
       color:#FFFFFF;
+      display:inline;
+      margin-left:70px;
 
      }
+   
      .actionbutton {
       background: #ffeb3b;
       right: 2%;

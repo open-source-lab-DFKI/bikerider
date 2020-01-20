@@ -36,14 +36,14 @@
 						</ion-item>
 					</ion-list>
 					<button ion-button  full  [disabled]= !isEnabled  (click)="goToProposals()" >
-						Search 
+						<p class="texte_search">Search</p>
 						<ion-icon name="custom-gobutton" style="margin-left:5rem;"></ion-icon>
 					</button>
 
 		</div>
 		
 		<ion-content>
-			<div id="map"></div>
+			<div id="map" class="overlay"></div>
 		</ion-content>
  
 </ion-content>

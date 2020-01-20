@@ -1,5 +1,18 @@
 page-trip {
 
+  .overlay {
+    box-sizing: border-box;
+    position: absolute;
+    left:0px;
+    top:0px;
+    height:100%;
+    width : 100%;
+    background:rgba(0,0,0,0.5); 
+    z-index: 999999999999;
+  }
+  @keyframes overlayFadein {
+     
+  }
   .scroll-content{
     padding:0 !important;
  }
@@ -105,7 +118,7 @@ page-trip {
   }
   
   .modal{
-   box-sizing: border-box;
+  box-sizing: border-box;
   position: absolute;
   height:40%;
   width : 70%;
@@ -132,5 +145,5 @@ page-trip {
   
     border-radius: 50%;
  }
-  
+
   }

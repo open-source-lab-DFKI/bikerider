@@ -40,10 +40,10 @@ export class HomePage {
  
   propertyList = [];
   Locations ={
-    startpoint : { lat: null , long: null },
-     endpoint : { lat: null , long: null }
+    startpoint : { lat: null , lng: null },
+     endpoint : { lat: null , lng: null }
   }
-  currentposition={lat:null,long:null}
+  currentposition={lat:null,lng:null}
   isEnabled = false   ; 
   id:string= uuid() ; 
 
@@ -221,7 +221,7 @@ export class HomePage {
     //   }
     // })
         this.Locations.startpoint.lat=location.lat ; 
-        this.Locations.startpoint.long= location.lon ; 
+        this.Locations.startpoint.lng= location.lon ; 
         this.autocomplete.input=location.display_name;
         this.startAutocompleteLocations=[];
         this.IsEnabled();
@@ -236,7 +236,7 @@ export class HomePage {
   selectLocationDestination(location) {
         
         this.Locations.endpoint.lat=location.lat ; 
-        this.Locations.endpoint.long= location.lon ; 
+        this.Locations.endpoint.lng= location.lon ; 
         this.autocompleteDestination.input=location.display_name;
         this.endAutocompleteLocations=[];
         this.IsEnabled();
@@ -276,7 +276,7 @@ export class HomePage {
       
        console.log(resp);
       this.currentposition.lat=resp.coords.latitude;
-      this.currentposition.long= resp.coords.longitude ; 
+      this.currentposition.lng= resp.coords.longitude ; 
           }).catch((error) => {
        console.log('Error getting location', error);
      });

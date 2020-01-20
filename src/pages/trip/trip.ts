@@ -48,6 +48,7 @@ export class TripPage {
    
   distance:any=null;
   popup:boolean=false ; 
+  overlay=""
   bikeIcon = L.icon({
     iconUrl: ('../../assets/images/bike.png'),
     iconSize:     [32, 32], // size of the icon   
@@ -299,6 +300,8 @@ distanceCalculator(){
 
 togglePopup(){
   this.popup=!this.popup ; 
+  this.popup? this.overlay="overlay":this.overlay="";
+  console.log(this.overlay);
 }
 
 date_filter(temps){

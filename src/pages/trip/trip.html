@@ -6,9 +6,9 @@
 -->
 <ion-header>
 
-<button ion-button class="backbutton" (click)="this.goHome()">
+<!-- <button ion-button class="backbutton" (click)="this.goHome()">
   <ion-icon ios="ios-home" md="md-home"></ion-icon>
-</button>
+</button> -->
 <ion-spinner class="spinner" *ngIf="this.distance ==null" class="title" name="dots"></ion-spinner>
 <label  *ngIf="this.distance !=null" class="title">Remaining Distance</label>
 <ion-icon *ngIf="this.distance !=null" class="custom-distance"></ion-icon>
@@ -24,27 +24,30 @@
 <ion-content padding>
 
     <div id="map" class="map">
-      <ion-card  *ngIf="popup==true" class="modal">
-        <ion-card-header>
-            <button   ion-button (click)="this.togglePopup()" class="exit-button" end>X</button>
-          </ion-card-header>
-
-          <ion-card-content>
-               
-                    <ion-item>
-                      <ion-label style="margin: 40px  ">
-                     Quit The Trip ?
-                      </ion-label>
-                    </ion-item>
-                   <ion-item class="goButton" >
-                      <button ion-button full danger round  color ="danger" (click)="this.goHome()" >Quit
-                       
-                      </button>
-                    
-                   </ion-item>
-            </ion-card-content>
+      <div class={{this.overlay}}>
+        <ion-card  *ngIf="popup==true" class="modal">
+          <ion-card-header>
+              <button   ion-button (click)="this.togglePopup()" class="exit-button" end>X</button>
+            </ion-card-header>
   
-     </ion-card>
+            <ion-card-content>
+                 
+                      <ion-item>
+                        <ion-label style="margin: 40px  ">
+                       Quit The Trip ?
+                        </ion-label>
+                      </ion-item>
+                     <ion-item class="goButton" >
+                        <button ion-button full danger round  color ="danger" (click)="this.goHome()" >Quit
+                         
+                        </button>
+                      
+                     </ion-item>
+              </ion-card-content>
+    
+       </ion-card>
+      </div>
+      
 
         <!-- <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
         <script src="leaflet-routing-machine.js"></script> -->

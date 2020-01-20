@@ -6,7 +6,7 @@ import { AlertController } from 'ionic-angular';
 import { ModalController, ViewController } from 'ionic-angular';
 import {TripPage} from '../trip/trip';
 import {HomePage} from '../home/home' ; 
-import {Trippropals1Page } from '../trippropals1/trippropals1';
+import { TripproposalsPage } from '../tripproposals/tripproposals';
 // import * as L from 'leaflet';
 // import 'leaflet-routing-machine' ; 
 import'leaflet';
@@ -20,19 +20,12 @@ declare var L:any;
 
 
 
-/**
- * Generated class for the TripproposalsPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
-
 @IonicPage()
 @Component({
-  selector: 'page-tripproposals',
-  templateUrl: 'tripproposals.html',
+  selector: 'page-trippropals1',
+  templateUrl: 'trippropals1.html',
 })
-export class TripproposalsPage implements OnInit {
+export class Trippropals1Page {
   @ViewChild('map') mapElement: ElementRef;
   map: any;
   marker ;
@@ -51,7 +44,7 @@ export class TripproposalsPage implements OnInit {
   choosen_route_id=null;
   choosen_route = this.routes[this.choosen_route_id]
   //the index in routes table of the hilighted route
-  highlighted_r=0;
+  highlighted_r=1;
   popup:boolean=true ; 
   // startpoint={"lng": 13.3412,"lat": 52.5254}; 
   // endpoint= {"lng": 13.4132,"lat": 52.5219};
@@ -60,8 +53,6 @@ export class TripproposalsPage implements OnInit {
   distance=[0,0];
   choosen_route_geometry  ; 
   users_positions:any ; 
-
-
   bikeIcon = L.icon({
     iconUrl: ('../../assets/images/bike.png'),
     iconSize:     [32, 32], // size of the icon   
@@ -82,9 +73,9 @@ export class TripproposalsPage implements OnInit {
      console.log(this.routes);
   }).then(()=>{
     console.log("here");
-    this.choosen_route_id=this.routes[0]['trip_id'];
+    this.choosen_route_id=this.routes[1]['trip_id'];
     this.choosen_route_geometry=this.routes[0].geometry;
-    this.distance[0]=this.routes[0]['distance'];
+    this.distance[0]=this.routes[1]['distance'];
     console.log(this.distance[0]);
     var intersections_array = this.routes[0]['trip_intersections']; 
      var sum=0 ;
@@ -156,7 +147,6 @@ export class TripproposalsPage implements OnInit {
 
    // load the coordinates  of the start and end point , which has been given in the pevious view
     loadCoordinates(){
-
       this.startLat= this.navParams.get('startpoint').lat; 
       this.startLng= this.navParams.get('startpoint').lng;
       this.startpoint.lat=this.startLat;
@@ -194,7 +184,7 @@ console.log(fake_trips);
  
  
 fake_trips.forEach(function(route,index){
-   if(index==0){
+   if(index==1){
     var  colors = "blue"
    }
    else 
@@ -220,10 +210,9 @@ fake_trips.forEach(function(route,index){
   
    
   polyline.on('click',(e)=>{
-    console.log(index);
-     if(index==1){
-       this.goToProposals1();
-     }
+    if(index==0){
+      this.goToProposals();
+    }
     this.popup=true ; 
     this.highlighted_r=index;
     this.choosen_route_id=this.routes[index]['trip_id'];
@@ -650,6 +639,9 @@ loadmap2(fake_trips){
      );
 
      polyline.on('click',(e)=>{
+      if(index==0){
+        this.goToProposals()
+      }
       this.popup=true ; 
       this.choosen_route_id=this.routes[index]['trip_id'];
       this.choosen_route_geometry=this.routes[index].geometry;
@@ -700,9 +692,9 @@ update_user(){
 delete(){
 //   console.log('delete') ; 
  
-  this.restprovider.update_trip(this.startpoint,'8035ea1e-1c60-4dda-8226-90747553943a',true,true)
+  this.restprovider.update_trip(this.startpoint,'cd7e2a09-4fae-4501-bb32-5daa2198ee2d',true,true)
    .then(()=>console.log("ahayyyy")) ;
-    this.restprovider.update_trip(this.startpoint,'75cb896e-159d-4891-ac42-4dee7990c110',true,true)
+    this.restprovider.update_trip(this.startpoint,'69219445-528a-4c0b-8ba4-ebd89e60f6a6',true,true)
   .then(data=>console.log(data)) ;
    
   this.restprovider.update_trip(this.startpoint,'36fc4d21-1c2d-4b69-b1c5-0f75b2629d41',true,true)
@@ -803,10 +795,12 @@ backward(){
   })
  }
 
- goToProposals1(){
+ 
+ goToProposals(){
      
      
-  this.navCtrl.push(Trippropals1Page,{
+  this.navCtrl.push(TripproposalsPage,{
+    
      startpoint: this.startpoint ,
       endpoint: this.endpoint  
     // startpoint : { lat: 52.524287, long:13.346346 }, 
@@ -814,8 +808,4 @@ backward(){
   })
 
 }
- 
-
-
- 
 }
