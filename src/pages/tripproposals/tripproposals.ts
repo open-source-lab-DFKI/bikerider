@@ -183,7 +183,8 @@ console.log(fake_trips);
   
   }).addTo(this.map);
 
-  
+
+
  
   //polyline 1
   
@@ -700,18 +701,18 @@ update_user(){
 delete(){
 //   console.log('delete') ; 
  
-  this.restprovider.update_trip(this.startpoint,'8035ea1e-1c60-4dda-8226-90747553943a',true,true)
+  this.restprovider.update_trip(this.startpoint,'de3b653e-51db-462f-99d9-7650f8a97114',true,true)
    .then(()=>console.log("ahayyyy")) ;
-    this.restprovider.update_trip(this.startpoint,'75cb896e-159d-4891-ac42-4dee7990c110',true,true)
+    this.restprovider.update_trip(this.startpoint,'0c407047-400f-4f5e-b43c-47c3a4fc2a18',true,true)
   .then(data=>console.log(data)) ;
    
-  this.restprovider.update_trip(this.startpoint,'36fc4d21-1c2d-4b69-b1c5-0f75b2629d41',true,true)
+  this.restprovider.update_trip(this.startpoint,'d834ea22-be7c-4b97-a487-1e20b631905a1',true,true)
    .then(data=>console.log(data)) ;
      
 
-   this.restprovider.update_trip(this.startpoint,'778ed560-8bed-4137-b245-a495568b2934',true,true)
+   this.restprovider.update_trip(this.startpoint,'5cb717d8-258c-430a-b2de-88d7f20a79be',true,true)
    .then(data=>console.log(data)) ;
-   this.restprovider.update_trip(this.startpoint,'71bfe1b1-1e33-4315-bed1-7c7efb9e34be',true,true)
+   this.restprovider.update_trip(this.startpoint,'7a07c086-9008-45fe-9e86-c00171d32524',true,true)
    .then(data=>console.log(data)) ;
    
 

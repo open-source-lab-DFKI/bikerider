@@ -50,11 +50,11 @@ export class TripPage {
   popup:boolean=false ; 
   overlay=""
   bikeIcon = L.icon({
-    iconUrl: ('../../assets/images/bike.png'),
+    iconUrl: ('../assets/images/bike.png'),
     iconSize:     [32, 32], // size of the icon   
     });
     positionIcon = L.icon({
-      iconUrl: ('../../assets/images/position.png'),
+      iconUrl: ('../assets/images/position.png'),
       iconSize:     [32, 32], // size of the icon   
       });
   

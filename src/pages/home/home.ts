@@ -37,6 +37,11 @@ export class HomePage {
   addressValue: any;
   zoom: number;
   users: any;
+  destinationLat:52.50890789689545;
+  destinationLong:13.376598359245694;
+  initial:number;
+  current:number;
+
  
   propertyList = [];
   Locations ={
@@ -52,16 +57,23 @@ export class HomePage {
     public platform: Platform, public navParams: NavParams,public device: DeviceOrientation) {
     
     
-   console.log(this.id); 
+   console.log("constructor")
     
   }
+
+  ngOnInit(){
+    console.log("here is where the first step beginns")
+  }
   
-  ionViewWillload(){
-   
+  ionViewWillLoad(){
+   console.log("will load")
+    this.destinationLat=52.50890789689545;
+    this.destinationLong=13.376598359245694;
  
   }
   //load all ressources 
   ionViewDidLoad() {
+    console.log("did load")
     this.setcurrentlocation();
     this.loadMap();
     this.restProvider.getUserIdentifier(this.id).then((value) => {
@@ -90,6 +102,13 @@ export class HomePage {
   ionViewCanLeave() {
      document.getElementById("map").outerHTML = "";
      console.log("can leave")  ;
+  }
+
+  detectChanges(){
+    console.log("i'am in the function that detects changes")
+    this.map.off();
+    this.map.remove();
+    this.loadMap();
   }
 
 
@@ -124,7 +143,13 @@ export class HomePage {
      
     }).addTo(this.map);
 
-
+ 
+    const click =  this.map.on('click',(e)=>{
+      console.log("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng);
+      this.destinationLat=e.latlng.lat;
+      this.destinationLong=e.latlng.lng;
+     this.detectChanges();
+    })
     this.platform.ready().then(() => {
 
       this.geolocation.getCurrentPosition({ enableHighAccuracy: true, timeout: 20000, maximumAge: 10000 }).then((resp) => {
@@ -137,8 +162,10 @@ export class HomePage {
         // this.currentLat = resp.coords.longitude;
         // this.setAddress(pos);
         this.map.setView([resp.coords.latitude, resp.coords.longitude],15);
-        
+     
         L.marker([resp.coords.latitude,resp.coords.longitude]).addTo(this.map);
+    
+        L.marker([this.destinationLat,this.destinationLong]).addTo(this.map);
         this.currentLocation = pos;
         // this.setAddress(this.currentLocation);
        
@@ -146,7 +173,10 @@ export class HomePage {
       }).catch((error) => {
         console.log('Error getting location', error);
       });
+  
+      
     });
+  
   }
 
   //retrieve  autocomplete  startpoint
@@ -272,6 +302,9 @@ export class HomePage {
  
   setcurrentlocation(){
     console.log("hi");
+    console.log(this.destinationLat);
+    console.log("well done so far");
+
     this.geolocation.getCurrentPosition().then((resp) => {
       
        console.log(resp);
