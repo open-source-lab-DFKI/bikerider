@@ -52,7 +52,7 @@
     "karma-mocha": "^0.2.0",
     "karma-safari-launcher": "^0.1.1",
     "karma-sauce-launcher": "^0.2.14",
-    "lodash": "^3.10.0",
+    "lodash": "^4.17.15",
     "mocha": "^2.3.3",
     "node-tick-processor": "~0.0.2",
     "regenerate": "~1.2.1",
