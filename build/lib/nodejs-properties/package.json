@@ -23,7 +23,7 @@
   "devDependencies": {
     "ini": "1.1.x",
     "speedy": "*",
-    "js-yaml": "2.1.x"
+    "js-yaml": "3.13.x"
   },
   "scripts": {
     "test": "node test/parse && node test/stringify"
