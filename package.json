@@ -47,7 +47,7 @@
     "leaflet": "^1.4.0",
     "leaflet-geosearch": "^2.7.0",
     "leaflet.photon": "^0.8.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.21",
     "mmir": "file:resources/typings/mmir-types",
     "mmir-lib": "git+https://github.com/mmig/mmir-lib.git",
     "mmir-plugin-speech-android": "git+https://github.com/mmig/mmir-plugin-speech-android.git#mmir-v5",
